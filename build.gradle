@@ -1,0 +1,46 @@
+buildscript {
+	ext {
+		springBootVersion = '1.2.1.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+
+jar {
+	baseName = 'zy'
+}
+
+run {
+  systemProperties = System.properties
+}
+
+repositories {
+	mavenCentral()
+    jcenter()
+}
+
+dependencies {
+	compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+	compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.boot:spring-boot-starter-jdbc")
+    compile("org.postgresql:postgresql:9.4-1200-jdbc41")
+    compile("org.yaml:snakeyaml:1.14")
+
+    compile "com.mangofactory:swagger-springmvc:1.0.0"
+    compile "org.ajar:swagger-spring-mvc-ui:0.4"
+
+	testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.1'
+}
