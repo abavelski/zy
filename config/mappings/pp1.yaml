@@ -1,0 +1,6 @@
+---
+  trafficMappings: 
+    - 
+      trafficType: "HOME"
+      usageType: "VOICE"
+      ratingCode: "voice-home"

@@ -1,0 +1,5 @@
+---
+  code: "signup"
+  description: "Signup fee"
+  type: "ONCE"
+  amount: 75

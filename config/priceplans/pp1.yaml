@@ -1,0 +1,32 @@
+---
+  code: "pp1"
+  name: "Price plan 1"
+  trafficPlans: 
+    - 
+      ratingCode: "voice-home"
+      rootLocation: 
+        name: "home"
+        timePlans: 
+          - 
+            charges: 
+              - 
+                ratingPlugin: "INITIAL"
+                rate: 0.49
+              - 
+                ratingPlugin: "VOICESTANDARD"
+                rate: 0.19
+    - 
+      ratingCode: "voice-home2"
+      locationPlugin: "FLAT"
+      timePlugin: "FLAT"
+      rootLocation: 
+        name: "home"
+        timePlans: 
+          - 
+            charges: 
+              - 
+                ratingPlugin: "INITIAL"
+                rate: 0.49
+              - 
+                ratingPlugin: "VOICESTANDARD"
+                rate: 0.19

@@ -1,0 +1,7 @@
+---
+  code: "mini"
+  name: "Mini"
+  fees: 
+    - "mini"
+    - "signup"
+  pricePlanCode: "pp1"

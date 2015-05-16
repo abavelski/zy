@@ -1,6 +1,5 @@
 package com.zy.app.fee.dao;
 
-import com.zy.app.crm.model.SignupPackage;
 import com.zy.app.fee.model.Fee;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
