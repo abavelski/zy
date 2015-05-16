@@ -12,6 +12,7 @@ import com.zy.app.rating.main.plugin.time.TimePlugin;
 import com.zy.app.rating.main.plugin.time.TimePluginType;
 import com.zy.app.rating.main.plugin.time.flat.FlatTimePlugin;
 import com.zy.app.rating.model.*;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -52,6 +53,7 @@ public class RatingServiceImplTest {
     Map<RatingType, RatingPlugin> ratingPlugins;
 
 
+    @Ignore
     @Test
     public void testFlatPricePlan() {
         Charge charge = aCharge()

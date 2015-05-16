@@ -1,0 +1,17 @@
+{
+  "name": "oet-service-fundconnect",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "angular": "~1.3.4",
+    "angular-route": "~1.2.20",
+    "angular-bootstrap": "~0.12.1",
+    "bootstrap": "~3.3.2",
+    "bootswatch": "~3.3.4",
+    "swagger-ui": "~2.0.24"
+  },
+  "resolutions": {
+    "angular": "1.2.28"
+  }
+}

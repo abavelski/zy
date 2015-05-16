@@ -29,9 +29,13 @@ repositories {
 dependencies {
 	compile("org.springframework.boot:spring-boot-starter-web") {
         exclude module: 'spring-boot-starter-tomcat'
+        exclude module: 'spring-boot-starter-logging'
     }
 	compile("org.springframework.boot:spring-boot-starter-jetty")
     compile("org.springframework.boot:spring-boot-starter-jdbc")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-log4j")
+
     compile("org.postgresql:postgresql:9.4-1200-jdbc41")
     compile("org.yaml:snakeyaml:1.14")
 
