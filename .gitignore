@@ -13,3 +13,4 @@ build/
 .gradle
 bower_components/
 node_modules/
+src/main/resources/static/
