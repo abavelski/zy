@@ -1,5 +1,5 @@
 {
-  "name": "zy-ui",
+  "name": "zy",
   "version": "0.0.1",
   "dependencies": {
     "grunt": "~0.4.4",
@@ -9,9 +9,13 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-html2js": "^0.1.9"
   },
+  "dist" : "src/main/resources/static",
   "engines": {
     "node": ">=0.10.x",
     "npm": ">=1.2.x"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "load-grunt-config": "^0.17.1"
+  }
 }
