@@ -7,13 +7,11 @@ module.exports = {
         dest:'<%= package.dist %>/app.js'
     },
     angular: {
-        src:['bower_components/angular/angular.js', 'bower_components/angular-route/angular-route.js'],
-        dest: '<%= package.dist %>/angular.js'
-    },
-    angularUi: {
-        src:['bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+        src:['bower_components/angular/angular.js',
+            'bower_components/angular-ui-router/release/angular-ui-router.js',
+            'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
             'bower_components/angular-bootstrap/ui-bootstrap.js'],
-        dest: '<%= package.dist %>/angular-ui.js'
+        dest: '<%= package.dist %>/angular.js'
     },
     jquery: {
         src:['bower_components/jquery/dist/jquery.js'],
@@ -22,6 +20,5 @@ module.exports = {
     css: {
         src: ['bower_components/bootswatch/sandstone/bootstrap.css', 'ui/css/app.css'],
         dest: '<%= package.dist %>/app.css'
-
     }
 };

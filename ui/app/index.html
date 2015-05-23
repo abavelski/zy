@@ -5,18 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Fund connect service admin</title>
+    <title>UI</title>
     <link href="app.css" rel="stylesheet">
     <script src="jquery.js"></script>
     <script src="angular.js"></script>
-    <script src="angular-ui.js"></script>
     <script src="app.js"></script>
 </head>
 
 <body ng-controller="AppCtrl">
 
 <div ng-include="'header.tpl.html'"></div>
-<div ng-view class="container"></div>
+<div ui-view class="container"></div>
 
 </body>
 </html>

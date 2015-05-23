@@ -37,7 +37,7 @@ public class RatingDaoImpl extends Dao implements RatingDao {
                             .withStartDate((rs.getTimestamp("start_date").toLocalDateTime()))
                             .withUserId(rs.getInt("user_id"))
                             .build();
-                }, new Integer[]{phoneNumber});
+                }, phoneNumber);
         return subscription;
     }
 }
