@@ -1,1 +1,7 @@
-<div>Choose phone number {{bla}}</div>
+<div class="row">
+    <div class="radio col-sm-12">
+        <div ng-repeat="number in numbers">
+            <label ><input type="radio" value="{{number}}" ng-model="$parent.$parent.selectedNumber" name="group" />{{number}}</label>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+ <div class="row">
+        <div ng-repeat="pkg in packages" class="col-sm-4 col-md-4 col-lg-4">
+            <div class="db-wrapper">
+                <div class="db-pricing-seven">
+                    <ul>
+                        <li class="price">
+                            {{pkg.name | uppercase}} - {{pkg.descriptions.monthlyPrice}}
+                        </li>
+                        <li>{{pkg.descriptions.voice}}</li>
+                        <li>{{pkg.descriptions.data}}</li>
+                        <li>{{pkg.descriptions.other[0]}}</li>
+                    </ul>
+                    <div class="pricing-footer">
+                        <a href="#/wizard/{{pkg.code}}/anumber" class="btn btn-default btn-lg">BUY
+                            <i class="glyphicon glyphicon-play-circle"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

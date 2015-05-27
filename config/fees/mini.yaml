@@ -1,6 +1,6 @@
 ---
   code: "mini"
-  description: "Mini monthly fee"
+  description: "Mini package monthly fee"
   type: "PRE"
-  amount: 99
+  amount: 29
   period: "MONTH"

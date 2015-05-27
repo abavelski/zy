@@ -1,0 +1,13 @@
+---
+  code: "mega"
+  name: "Mega"
+  fees: 
+    - "mega"
+    - "signup"
+  pricePlanCode: "pp1"
+  descriptions:
+    monthlyPrice: "99"
+    voice: "12 hours"
+    data: "20 GB"
+    other:
+      - "4G"

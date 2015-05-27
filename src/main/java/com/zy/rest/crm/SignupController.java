@@ -8,10 +8,7 @@ import com.zy.app.crm.model.SignupPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,6 +32,11 @@ public class SignupController {
     @RequestMapping(value= "/packages", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<SignupPackage>> getAllSignupPackages() {
         return new ResponseEntity<>(signupPackageDao.getAllSignupPackages(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value= "/packages/{code}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<SignupPackage> getSignupPackage(@PathVariable String code) {
+        return new ResponseEntity<>(signupPackageDao.findPackageByCode(code), HttpStatus.OK);
     }
 
 }

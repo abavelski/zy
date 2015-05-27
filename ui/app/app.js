@@ -1,5 +1,5 @@
 'use strict';
-angular.module('app', [ 'templates.app', 'templates.common', 'ui.router', 'admin', 'signup'])
+angular.module('app', [ 'templates.app', 'templates.common', 'ui.router', 'notifications', 'admin', 'signup', 'customers'])
 
     .config(function($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/signup');
@@ -12,7 +12,15 @@ angular.module('app', [ 'templates.app', 'templates.common', 'ui.router', 'admin
             });
     })
 
-    .controller('AppCtrl', ['$scope', function($scope) {}])
+    .controller('AppCtrl', function($scope, notifications) {
+        $scope.getNotification = function() {
+            return notifications.get();
+        };
+        $scope.removeNotification = function() {
+            notifications.remove();
+        }
+    })
+
 
     .controller('HeaderCtrl', function ($scope, $location) {
         $scope.isActive = function(str){ return $location.path().search(str)>-1; };

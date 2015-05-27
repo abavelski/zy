@@ -1,0 +1,37 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Signup for {{packageCode | uppercase}}</h3>
+    </div>
+    <div class="panel-body">
+
+        <ul class="nav nav-pills nav-justified thumbnail">
+            <li ng-class="{active: isActive('anumber')}"><a href="#/wizard/{{packageCode}}/anumber">
+                <h4 class="list-group-item-heading">Step 1</h4>
+                <p class="list-group-item-text">Choose phone number</p>
+            </a></li>
+            <li ng-class="{active: isActive('userdata')}"><a href="#/wizard/{{packageCode}}/userdata">
+                <h4 class="list-group-item-heading">Step 2</h4>
+                <p class="list-group-item-text">User data</p>
+            </a></li>
+            <li ng-class="{active: isActive('confirmation')}"><a href="#/wizard/{{packageCode}}/confirmation">
+                <h4 class="list-group-item-heading">Step 3</h4>
+                <p class="list-group-item-text">Confirmation</p>
+            </a></li>
+        </ul>
+
+        <div ui-view></div>
+    </div>
+    <div class="panel-footer">
+        <div class="pull-right">
+            <a type="button" class="btn btn-warning" href="#/signup">Cancel</a>
+            <button type="button" ng-click="next()" class="btn btn-primary">{{btnName()}}</button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
+
+
+
+

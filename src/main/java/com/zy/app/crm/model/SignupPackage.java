@@ -7,6 +7,7 @@ public class SignupPackage {
     String name;
     List<String> fees;
     String pricePlanCode;
+    PackageDescriptions descriptions;
 
     public String getCode() {
         return code;
@@ -38,5 +39,13 @@ public class SignupPackage {
 
     public void setPricePlanCode(String pricePlanCode) {
         this.pricePlanCode = pricePlanCode;
+    }
+
+    public PackageDescriptions getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(PackageDescriptions descriptions) {
+        this.descriptions = descriptions;
     }
 }

@@ -5,3 +5,9 @@
     - "mini"
     - "signup"
   pricePlanCode: "pp1"
+  descriptions:
+    monthlyPrice: "29"
+    voice: "2 hours"
+    data: "2 GB"
+    other:
+      - "4G"

@@ -15,7 +15,9 @@
 <body ng-controller="AppCtrl">
 
 <div ng-include="'header.tpl.html'"></div>
-<div ui-view class="container"></div>
+<br/>
+<div ng-include="'notifications.tpl.html'" ng-show="getNotification()"></div>
+<div ui-view class="container-fluid"></div>
 
 </body>
 </html>
