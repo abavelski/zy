@@ -5,7 +5,8 @@ angular.module('customers', [])
         $stateProvider
             .state('search', {
                 url: '/search',
-                templateUrl: 'customers/search.tpl.html'
+                templateUrl: 'customers/search.tpl.html',
+                controller : 'SearchCtrl'
             })
             .state('customer', {
                 url: '/customer/:anumber',
@@ -15,5 +16,10 @@ angular.module('customers', [])
                     url: '/subscription',
                     templateUrl: 'customers/subscription.tpl.html'
                 })
+    })
+    .controller('SearchCtrl', function($scope, $location){
+        $scope.toSubscription = function() {
+            $location.path('/customer/1234/subscription');
+        }
     });
 
