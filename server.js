@@ -10,7 +10,7 @@ var express = require('express'),
 app.use(morgan('short'))
     .use(express.static(pjson.dist))
     .use(bodyParser.json())
-    .use(bodyParser.urlencoded());
+    .use(bodyParser.urlencoded({ extended: true }));
 
     var router = express.Router();
     packages(router);

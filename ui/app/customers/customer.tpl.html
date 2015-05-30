@@ -1,14 +1,23 @@
 <div class="row">
     <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Overview</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Analytics</a></li>
-            <li><a href="#">Export</a></li>
+            <li ng-class="{active: isActive('subscription')}"><a ui-sref="customer.subscription">Subscription</a></li>
+            <li ng-class="{active: isActive('user')}"><a ui-sref="customer.user">User</a></li>
+            <li ng-class="{active: isActive('usage')}"><a ui-sref="customer.usage">Usage</a></li>
+            <li>
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Phone" name="q">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </li>
         </ul>
 
     </div>
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
         <div ui-view></div>
     </div>
 
