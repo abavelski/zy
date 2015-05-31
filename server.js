@@ -5,7 +5,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     pjson = require('./package.json'),
     packages = require('./mocks/packages'),
-    anumbers = require('./mocks/anumbers');
+    anumbers = require('./mocks/anumbers'),
+    customers = require('./mocks/customers');
 
 app.use(morgan('short'))
     .use(express.static(pjson.dist))
@@ -15,6 +16,7 @@ app.use(morgan('short'))
     var router = express.Router();
     packages(router);
     anumbers(router);
+    customers(router);
 
     app.use('/api', router);
     app.listen(8000);

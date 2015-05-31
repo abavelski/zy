@@ -58,7 +58,7 @@ module.exports = function(router) {
         res.json(packages);
     });
 
-    router.route('/signup/packages/mega').get(function(req, res) {
+    router.route('/signup/packages/:package').get(function(req, res) {
         res.json(packages[2]);
     });
 
