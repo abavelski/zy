@@ -89,12 +89,7 @@ body {
     font-size: 23px;
 }
 
-
 .sidebar {
-    display: none;
-}
-@media (min-width: 400px) {
-    .sidebar {
         position: fixed;
         top: 51px;
         bottom: 0;
@@ -106,8 +101,8 @@ body {
         overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
         background-color: #f5f5f5;
         border-right: 1px solid #eee;
-    }
 }
+
 /* Sidebar navigation */
 .nav-sidebar {
     margin-right: -21px; /* 20px padding + 1px border */
@@ -126,8 +121,6 @@ body {
 }
 
 
-
-
 .main {
     padding: 20px;
 }
@@ -136,4 +129,10 @@ body {
         padding-right: 40px;
         padding-left: 40px;
     }
+}
+
+.btn-sq {
+    width: 100px !important;
+    height: 100px !important;
+    font-size: 8px;
 }

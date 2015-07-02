@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h3 class="modal-title">Terminate subscription</h3>
+</div>
+<div class="modal-body">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="tDate" class="col-sm-3 control-label">Termination date</label>
+            <div class="col-sm-9">
+                <p class="input-group">
+                    <input id="tDate" type="text"
+                           class="form-control"
+                           datepicker-popup="shortDate"
+                           is-open="opened"
+                           ng-model="dt" close-text="Close" />
+                    <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="tReason" class="col-sm-3 control-label">Reason</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="tReason" placeholder="Termination reason">
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="terminate()">Terminate</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

@@ -10,6 +10,13 @@
                 <li ng-class="{active: isActive('customers') || isActive('search')}"><a ui-sref="search">Customers</a></li>
                 <li ng-class="{active: isActive('admin')}"><a ui-sref="admin">Admin</a></li>
             </ul>
+            <form class="navbar-form navbar-right">
+                <div class="form-group">
+                    <input type="text" placeholder="Phone" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            </form>
         </div>
 
     </div>
