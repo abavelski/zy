@@ -8,14 +8,14 @@
             <ul class="nav navbar-nav">
                 <li ng-class="{active: isActive('signup')}"><a ui-sref="signup">Signup</a></li>
                 <li ng-class="{active: isActive('customers') || isActive('search')}"><a ui-sref="search">Customers</a></li>
-                <li ng-class="{active: isActive('admin')}"><a ui-sref="admin">Admin</a></li>
+                <li ng-class="{active: isActive('admin')}"><a ui-sref="admin.billing">Admin</a></li>
             </ul>
             <form class="navbar-form navbar-right">
                 <div class="form-group">
                     <input type="text" placeholder="Phone" class="form-control">
                 </div>
 
-                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                <a href="#/customers/1234/subscription" class="btn btn-primary"><i class="fa fa-search"></i></a>
             </form>
         </div>
 

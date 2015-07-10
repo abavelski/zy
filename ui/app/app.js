@@ -3,13 +3,6 @@ angular.module('app', [ 'templates.app', 'templates.common', 'ui.router', 'notif
 
     .config(function($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/signup');
-
-        $stateProvider
-            .state('admin', {
-                url: '/admin',
-                templateUrl: 'admin/admin.tpl.html',
-                controller: 'AdminCtrl'
-            });
     })
 
     .controller('AppCtrl', function($scope, notifications) {

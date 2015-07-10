@@ -18,6 +18,11 @@ angular.module('customers', ['ui.bootstrap'])
                     templateUrl: 'customers/subscription.tpl.html',
                     controller : 'SubscriptionCtrl'
                 })
+                .state('customer.network', {
+                    url: '/network',
+                    templateUrl: 'customers/network.tpl.html',
+                    controller : 'NetworkCtrl'
+                })
                 .state('customer.user', {
                     url: '/user',
                     templateUrl: 'customers/user.tpl.html',
@@ -46,6 +51,7 @@ angular.module('customers', ['ui.bootstrap'])
         }
 
     })
+    .controller('NetworkCtrl', function($scope){})
     .controller('TerminateSubscriptionCtrl', function ($scope, $modalInstance) {
         $scope.terminate = function () {
             $modalInstance.close();
