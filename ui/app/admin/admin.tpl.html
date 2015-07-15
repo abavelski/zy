@@ -3,15 +3,10 @@
         <ul class="nav nav-sidebar">
             <li ng-class="{active: isActive('billing')}"><a ui-sref="admin.billing">Billing</a></li>
             <li ng-class="{active: isActive('cdr')}"><a ui-sref="admin.cdr">CDR</a></li>
+            <li ng-class="{active: isActive('provisioning')}"><a ui-sref="admin.provisioning">Provisioning</a></li>
         </ul>
-
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
-
-
-                <div ui-view></div>
-
-
+        <div ui-view></div>
     </div>
-
 </div>

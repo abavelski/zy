@@ -16,6 +16,10 @@ angular.module('admin', [])
                 	.state('admin.cdr', {
                     	url: '/cdr',
                     	templateUrl: 'admin/cdr.tpl.html'
+                	})
+                	.state('admin.provisioning', {
+                    	url: '/provisioning',
+                    	templateUrl: 'admin/provisioning.tpl.html'
                 	});
     })
     .controller('AdminCtrl', function ($scope, $location) {

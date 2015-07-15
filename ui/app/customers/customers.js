@@ -42,18 +42,99 @@ angular.module('customers', ['ui.bootstrap'])
         $scope.isActive = function(str){ return $location.path().search(str)>-1; };
     })
     .controller('SubscriptionCtrl', function($scope, $modal){
+        $scope.packageOptions = function() {
+            $modal.open({
+                controller: 'PackageOptionsCtrl',
+                templateUrl: 'customers/packageOptions.tpl.html'
+            });
+        };  
+
         $scope.terminateSubscription = function() {
             $modal.open({
-                animation: true,
                 controller: 'TerminateSubscriptionCtrl',
                 templateUrl: 'customers/terminateSubscription.tpl.html'
             });
-        }
+        };        
+
+        $scope.blockDevice = function() {
+            $modal.open({
+                controller: 'BlockDeviceCtrl',
+                templateUrl: 'customers/blockDevice.tpl.html'
+            });
+        };
+
+        $scope.changeNumber = function() {
+            $modal.open({
+                controller: 'ChangeNumberCtrl',
+                templateUrl: 'customers/changeNumber.tpl.html'
+            });
+        };
 
     })
     .controller('NetworkCtrl', function($scope){})
+    
     .controller('TerminateSubscriptionCtrl', function ($scope, $modalInstance) {
         $scope.terminate = function () {
+            $modalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.close();
+        };
+        $scope.open = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.opened = true;
+        };
+
+    })    
+    .controller('ChangeNumberCtrl', function ($scope, $modalInstance) {
+        $scope.numbers = ['61660020', '61660021', '61660022', '61660023', '61660024'];
+        $scope.change = function () {
+            $modalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.close();
+        };
+        $scope.open = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.opened = true;
+        };
+
+    })
+    .controller('BlockDeviceCtrl', function ($scope, $modalInstance) {
+        
+        $scope.ok = function () {
+            $modalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.close();
+        };
+        $scope.open = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.opened = true;
+        };
+
+    })
+    .controller('PackageOptionsCtrl', function ($scope, $modalInstance) {
+        $scope.networkOptions = [{
+            name : 'Roaming',
+            value : true
+        }, 
+        {   name: 'Data Roaming',
+            value: true
+        },
+        {   name: 'Internationsl calls',
+            value: false
+        }];
+        $scope.ok = function () {
             $modalInstance.close();
         };
 
