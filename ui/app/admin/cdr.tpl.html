@@ -1,1 +1,67 @@
-<div>cdr</div>
+<div>
+    <h3>Create new Call Detail Record:</h3>
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="usageType" class="col-sm-2 control-label">Usage type</label>
+            <div class="col-sm-10">
+
+                <select id="usageType" class="form-control"
+                        ng-options="usageType for usageType in usageTypes"
+                        ng-model="selectedUsageType">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="trafficType" class="col-sm-2 control-label">Traffic type</label>
+            <div class="col-sm-10">
+                <select id="trafficType" class="form-control"
+                        ng-options="trafficType for trafficType in trafficTypes"
+                        ng-model="selectedTrafficType">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="aNumber" class="col-sm-2 control-label">A-number</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="aNumber" placeholder="A-number">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="bNumber" class="col-sm-2 control-label">B-number</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="bNumber" placeholder="B-number">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="chargeDate" class="margin-top-45 col-sm-2 control-label">Charge date</label>
+            <div class="col-sm-5">
+                <p class="margin-top-45 input-group">
+                    <input id="chargeDate" type="text"
+                           class="form-control"
+                           datepicker-popup="shortDate"
+                           is-open="opened"
+                           ng-model="dt" close-text="Close" />
+                    <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                </p>
+
+            </div>
+            <div class="col-sm-5">
+                <timepicker ng-model="mytime"></timepicker>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="amount" class="col-sm-2 control-label">Amount</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="amount" placeholder="Amount">
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
