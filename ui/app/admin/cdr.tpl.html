@@ -1,5 +1,5 @@
 <div>
-    <h3>Create new Call Detail Record:</h3>
+    <h4>Create new Call Detail Record:</h4>
 
     <div class="form-horizontal">
         <div class="form-group">
@@ -24,13 +24,13 @@
         <div class="form-group">
             <label for="aNumber" class="col-sm-2 control-label">A-number</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="aNumber" placeholder="A-number">
+                <input type="text" ng-model="aNumber" class="form-control" id="aNumber" placeholder="A-number">
             </div>
         </div>
         <div class="form-group">
             <label for="bNumber" class="col-sm-2 control-label">B-number</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="bNumber" placeholder="B-number">
+                <input type="text" class="form-control" ng-model="bNumber" id="bNumber" placeholder="B-number">
             </div>
         </div>
 
@@ -50,18 +50,17 @@
 
             </div>
             <div class="col-sm-5">
-                <timepicker ng-model="mytime"></timepicker>
+                <timepicker ng-model="dt"></timepicker>
             </div>
         </div>
 
         <div class="form-group">
             <label for="amount" class="col-sm-2 control-label">Amount</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="amount" placeholder="Amount">
+                <input type="number" ng-model="amount" class="form-control" id="amount" placeholder="Amount">
             </div>
         </div>
-
-
+        <button class="btn btn-primary pull-right" ng-click="submitCdr()">Submit</button>
     </div>
 
 </div>

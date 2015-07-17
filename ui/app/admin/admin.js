@@ -40,4 +40,16 @@ angular.module('admin', [])
             $scope.opened = true;
         };
 
+        $scope.submitCdr = function() {
+            var cdr = {
+                usageType : $scope.selectedUsageType,
+                trafficType : $scope.selectedTrafficType,
+                destination : $scope.bNumber,
+                phoneNumber : $scope.aNumber,
+                chargeDate : $scope.dt,
+                amount : $scope.amount
+            };
+            console.log(cdr);
+        };
+
     });
