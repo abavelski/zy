@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class JacksonConfig {
+    //final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
@@ -32,7 +33,8 @@ public class JacksonConfig {
         module.addDeserializer(LocalDate.class, new JsonDeserializer<LocalDate>() {
             @Override
             public LocalDate deserialize(JsonParser jp, DeserializationContext ctx) throws IOException {
-                return LocalDate.parse(jp.getValueAsString(), DateTimeFormatter.ISO_LOCAL_DATE);
+
+                return LocalDate.parse(jp.getValueAsString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             }
         });
         module.addSerializer(LocalDateTime.class, new JsonSerializer<LocalDateTime>() {

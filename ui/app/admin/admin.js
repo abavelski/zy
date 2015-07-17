@@ -9,9 +9,10 @@ angular.module('admin', [])
                 templateUrl: 'admin/admin.tpl.html',
                 controller: 'AdminCtrl'
             	})
-                	.state('admin.billing', {
-                    	url: '/billing',
-                    	templateUrl: 'admin/billing.tpl.html'
+                	.state('admin.numberrange', {
+                    	url: '/numberrange',
+                    	templateUrl: 'admin/numberrange.tpl.html',
+                        controller: 'NumberRangeCtrl'
                 	})
                 	.state('admin.cdr', {
                     	url: '/cdr',
@@ -26,7 +27,13 @@ angular.module('admin', [])
     .controller('AdminCtrl', function ($scope, $location) {
     	$scope.isActive = function(str){ return $location.path().search(str)>-1; };
     })
-    .controller('CdrCtrl', function ($scope) {
+    .controller('NumberRangeCtrl', function ($scope, $http) {
+        $scope.submitRange = function() {
+            console.log('Range:', $scope.firstNumber, $scope.lastNumber);
+        };
+    })
+    .controller('CdrCtrl', function ($scope, $http) {
+        $scope.dt = new Date();
         $scope.usageTypes = ['VOICE', 'DATA', 'SMS', 'MMS'];
         $scope.selectedUsageType = $scope.usageTypes[0];
 
@@ -40,16 +47,39 @@ angular.module('admin', [])
             $scope.opened = true;
         };
 
+        var pad = function (number) {
+            if (number < 10) {
+                return '0' + number;
+            }
+            return number;
+        };
+
+        var myDate = function(dt, tm) {
+            return dt.getUTCFullYear() +
+                '-' + pad(dt.getUTCMonth() + 1) +
+                '-' + pad(dt.getUTCDate()) +
+                'T' + pad(tm.getUTCHours()) +
+                ':' + pad(tm.getUTCMinutes()) +
+                ':' + pad(tm.getUTCSeconds());
+        };
+
         $scope.submitCdr = function() {
             var cdr = {
                 usageType : $scope.selectedUsageType,
                 trafficType : $scope.selectedTrafficType,
                 destination : $scope.bNumber,
                 phoneNumber : $scope.aNumber,
-                chargeDate : $scope.dt,
+                chargeDate : myDate($scope.dt, $scope.tm),
                 amount : $scope.amount
             };
             console.log(cdr);
+            $http.post('/api/billing-records/', cdr)
+                .success(function(){
+                    console.log('OK');
+                })
+                .error(function(){
+                    console.log('error');
+                });
         };
 
     });

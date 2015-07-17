@@ -29,7 +29,8 @@ angular.module('signup', ['notifications'])
             });
     })
 
-    .controller('SignupCtrl', function ($scope, $stateParams, $location, notifications) {
+    .controller('SignupCtrl', function ($scope, $stateParams, $location, notifications, $http) {
+        var reservationKey;
         $scope.isActive = function(str){ return $location.path().search(str)>-1; };
         $scope.packageCode = $stateParams.package;
         $scope.selectedNumber = '';
@@ -41,9 +42,34 @@ angular.module('signup', ['notifications'])
 
         $scope.next = function() {
             var step = $scope.steps[($scope.currentStep++)];
+            if ($scope.currentStep===2) {
+                console.log('reserving: '+ $scope.selectedNumber);
+                $http.post('/api/a-number/'+$scope.selectedNumber+'/reserve')
+                    .success(function(data){
+                        console.log('OK', data);
+                        reservationKey = data.reservationKey;
+                    })
+                    .error(function(err){
+                        console.log('error', err);
+                    });
+
+            }
             if ($scope.currentStep===4) {
-                notifications.set('Signup successful!');
-                $location.path('/');
+                $http.post('/api/signup', {
+                    reservationKey : reservationKey,
+                    packageCode : $scope.packageCode,
+                    user : $scope.user
+
+                })
+                    .success(function(){
+                        notifications.set('Signup successful!');
+                        $location.path('/');
+                    })
+                    .error(function(){
+                        notifications.set('Error!');
+                        $location.path('/');
+                    });
+
             } else {
                 $location.path('/wizard/'+$scope.packageCode+'/'+step);
             }
