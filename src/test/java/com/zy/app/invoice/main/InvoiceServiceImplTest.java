@@ -3,6 +3,7 @@ package com.zy.app.invoice.main;
 
 import com.zy.app.common.model.ChargeLine;
 import com.zy.app.invoice.dao.InvoiceDao;
+import com.zy.app.invoice.dao.InvoiceLineDao;
 import com.zy.app.invoice.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,8 @@ public class InvoiceServiceImplTest {
     @Mock
     InvoiceDao invoiceDao;
     @Mock
+    InvoiceLineDao invoiceLineDao;
+    @Mock
     VatService vatService;
     @Mock
     InvoiceScheduleService scheduleService;
@@ -42,7 +45,7 @@ public class InvoiceServiceImplTest {
         updatedInvoice.setTotalExclVat(60d);
         //verify
         invoiceService.addChargeToInvoice(InvoiceTestData.newChargeLine());
-        verify(invoiceDao).createInvoiceLine(InvoiceTestData.newInvoiceLine());
+        verify(invoiceLineDao).createInvoiceLine(InvoiceTestData.newInvoiceLine());
         verify(invoiceDao).updateInvoice(updatedInvoice);
     }
 
@@ -62,7 +65,7 @@ public class InvoiceServiceImplTest {
         invoiceService.addChargeToInvoice(InvoiceTestData.newChargeLine());
         verify(scheduleService).getScheduleFor(InvoiceTestData.CHARGEDATE);
         verify(invoiceDao, times(1)).createInvoice(any(Invoice.class));
-        verify(invoiceDao).createInvoiceLine(InvoiceTestData.newInvoiceLine());
+        verify(invoiceLineDao).createInvoiceLine(InvoiceTestData.newInvoiceLine());
         verify(invoiceDao).updateInvoice(updatedInvoice);
     }
 
@@ -84,7 +87,7 @@ public class InvoiceServiceImplTest {
 
         //verify
         invoiceService.addChargeToInvoice(chargeLine);
-        verify(invoiceDao).createInvoiceLine(invoiceLine);
+        verify(invoiceLineDao).createInvoiceLine(invoiceLine);
         verify(invoiceDao).updateInvoice(updatedInvoice);
     }
 }

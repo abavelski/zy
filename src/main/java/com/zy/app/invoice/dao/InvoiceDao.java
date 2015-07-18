@@ -11,6 +11,6 @@ public interface InvoiceDao {
     int createInvoice(Invoice invoice);
     void updateInvoice(Invoice invoice);
     List<Invoice> getSortedOpenInvoices(int subscriptionId);
-    int createInvoiceLine(InvoiceLine invoiceLine);
+
 
 }

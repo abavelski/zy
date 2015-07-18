@@ -71,25 +71,7 @@ public class InvoiceDaoImpl extends Dao implements InvoiceDao {
         return invoices;
     }
 
-    @Override
-    public int createInvoiceLine(InvoiceLine invoiceLine) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(
-                (connection) -> {
-                    PreparedStatement ps = connection.prepareStatement(
-                            "insert into invoice_line(subscription_id, total, description, invoice_id, charge_date, reference_id)" +
-                                    "values( ?, ? ,? ,? ,?,?)", new String[] {"id"});
-                    ps.setInt(1, invoiceLine.getSubscriptionId());
-                    ps.setDouble(2, invoiceLine.getTotal());
-                    ps.setString(3, invoiceLine.getDescription());
-                    ps.setInt(4, invoiceLine.getInvoiceId());
-                    ps.setTimestamp(5, toDB(invoiceLine.getChargeDate()));
-                    ps.setInt(6, invoiceLine.getReferenceId());
-                    return ps;
-                }, keyHolder
-        );
-        return keyHolder.getKey().intValue();
-    }
+
 
 
 }

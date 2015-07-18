@@ -9,5 +9,6 @@ import com.zy.app.crm.model.Service;
 public interface ServiceDao {
 
     public int createService(Service service);
+    public Service findServiceByPhoneNumber(Integer phoneNumber);
 
 }

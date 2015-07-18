@@ -4,6 +4,7 @@ import com.zy.app.cdr.dao.BillingRecordDao;
 import com.zy.app.cdr.model.BillingRecord;
 import com.zy.app.common.model.ChargeLine;
 import com.zy.app.invoice.dao.InvoiceDao;
+import com.zy.app.invoice.dao.InvoiceLineDao;
 import com.zy.app.invoice.model.Invoice;
 import com.zy.app.invoice.model.InvoiceLine;
 import com.zy.app.invoice.model.InvoiceSchedule;
@@ -23,6 +24,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     InvoiceDao invoiceDao;
+    @Autowired
+    InvoiceLineDao invoiceLineDao;
     @Autowired
     VatService vatService;
     @Autowired
@@ -116,7 +119,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .withTotal(chargeLine.getTotal())
                 .withInvoiceId(invoice.getId())
                 .build();
-        invoiceDao.createInvoiceLine(invoiceLine);
+        invoiceLineDao.createInvoiceLine(invoiceLine);
     }
 
     private boolean isInvoiceOpenOn(Invoice invoice, LocalDateTime chargeDate) {
