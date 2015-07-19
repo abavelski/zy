@@ -1,0 +1,14 @@
+---
+  code: "pp1"
+  name: "Campaign plan 1"
+  trafficPlans: 
+    - 
+      ratingCode: "voice-home"
+      rootLocation: 
+        name: "home"
+        timePlans: 
+          - 
+            campaigns:
+              - "VOICE120"
+              - "VOICE300"
+              - "VOICE600"

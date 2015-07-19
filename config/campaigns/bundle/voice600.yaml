@@ -1,0 +1,6 @@
+---
+  code: "voice600"
+  description: "Monthly voice bundle with 600 minutes"
+  amount: 36000
+  periodType: "MONTH"
+  perdiodNumber: 1

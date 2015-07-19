@@ -1,4 +1,4 @@
-angular.module('admin', [])
+angular.module('admin', ['notifications'])
 
     .config(function($stateProvider) {
 
@@ -24,16 +24,29 @@ angular.module('admin', [])
                     	templateUrl: 'admin/provisioning.tpl.html'
                 	});
     })
-    .controller('AdminCtrl', function ($scope, $location) {
+    .controller('AdminCtrl', function ($scope, $location, notifications) {
+
+        $scope.notifications = notifications;
+
     	$scope.isActive = function(str){ return $location.path().search(str)>-1; };
     })
-    .controller('NumberRangeCtrl', function ($scope, $http) {
+    .controller('NumberRangeCtrl', function ($scope, $http, notifications) {
+        $scope.numberRange = {};
         $scope.submitRange = function() {
-            console.log('Range:', $scope.firstNumber, $scope.lastNumber);
+            console.log('Range:', $scope.numberRange.firstNumber, $scope.numberRange.lastNumber);
+            $http.post('/api/number-range', $scope.numberRange)
+                .success(function(){
+                    notifications.set('A-Numbers created');
+                    $scope.numberRange = {};
+                })
+                .error(function(){
+                    notifications.set('A-Numbers NOT created');
+                });
         };
     })
     .controller('CdrCtrl', function ($scope, $http) {
         $scope.dt = new Date();
+        $scope.tm = new Date();
         $scope.usageTypes = ['VOICE', 'DATA', 'SMS', 'MMS'];
         $scope.selectedUsageType = $scope.usageTypes[0];
 

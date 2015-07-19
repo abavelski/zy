@@ -8,4 +8,5 @@ import com.zy.app.crm.model.User;
 public interface UserDao {
 
     public int createUser(User user);
+    public User getUserById(Integer id);
 }

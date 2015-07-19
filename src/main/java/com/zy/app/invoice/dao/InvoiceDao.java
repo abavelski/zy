@@ -1,6 +1,5 @@
 package com.zy.app.invoice.dao;
 
-
 import com.zy.app.invoice.model.Invoice;
 import com.zy.app.invoice.model.InvoiceLine;
 
@@ -10,7 +9,7 @@ public interface InvoiceDao {
 
     int createInvoice(Invoice invoice);
     void updateInvoice(Invoice invoice);
-    List<Invoice> getSortedOpenInvoices(int subscriptionId);
+    List<Invoice> getInvoicesBySubscriptionIdAndStatus(int subscriptionId, Invoice.Status status);
 
 
 }

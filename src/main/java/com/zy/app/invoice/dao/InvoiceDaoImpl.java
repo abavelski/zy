@@ -53,10 +53,10 @@ public class InvoiceDaoImpl extends Dao implements InvoiceDao {
 
 
     @Override
-    public List<Invoice> getSortedOpenInvoices(int subscriptionId) {
+    public List<Invoice> getInvoicesBySubscriptionIdAndStatus(int subscriptionId, Invoice.Status status) {
         List<Invoice> invoices = this.jdbcTemplate.query(
                 "select * from invoice where subscription_id = "+subscriptionId+" and status='"
-                        + Invoice.Status.OPEN+"' order by id",
+                        + status+"' order by id",
                 (rs, rowNum) -> {
                     return anInvoice()
                             .withId(rs.getInt("id"))

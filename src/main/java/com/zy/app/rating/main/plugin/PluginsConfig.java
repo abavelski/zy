@@ -1,5 +1,9 @@
 package com.zy.app.rating.main.plugin;
 
+import com.zy.app.campaign.main.CampaignPlugin;
+import com.zy.app.campaign.main.CampaignType;
+import com.zy.app.campaign.main.plugin.BundlePlugin;
+import com.zy.app.campaign.model.BundleSettings;
 import com.zy.app.rating.main.plugin.location.LocationPlugin;
 import com.zy.app.rating.main.plugin.location.LocationType;
 import com.zy.app.rating.main.plugin.location.bestmatch.BestMatch;
@@ -16,6 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
@@ -45,6 +50,13 @@ public class PluginsConfig {
         return map;
     }
 
+    @Bean
+    public Map<CampaignType, CampaignPlugin> campaignPlugins() {
+        Map<CampaignType, CampaignPlugin> map = new EnumMap<>(CampaignType.class);
+        map.put(CampaignType.BUNDLE, bundle());
+        return map;
+    }
+
     @Bean public RatingPlugin voiceStandard() {
         return new VoiceStandard();
     }
@@ -68,4 +80,10 @@ public class PluginsConfig {
     @Bean public TimePlugin advanced() {
         return new AdvancedTimePlugin();
     }
+
+    @Bean public CampaignPlugin bundle() {
+        return new BundlePlugin();
+    }
+
+
 }

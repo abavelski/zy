@@ -12,10 +12,10 @@
             </ul>
             <form class="navbar-form navbar-right">
                 <div class="form-group">
-                    <input type="text" placeholder="Phone" class="form-control">
+                    <input ng-model="phoneNumber" type="text" placeholder="Phone" class="form-control">
                 </div>
 
-                <a href="#/customers/1234/subscription" class="btn btn-primary"><i class="fa fa-search"></i></a>
+                <button ng-click="searchByPhone()" class="btn btn-primary"><i class="fa fa-search"></i></button>
             </form>
         </div>
 

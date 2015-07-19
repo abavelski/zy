@@ -9,7 +9,8 @@
     "bootstrap": "~3.3.2",
     "bootswatch": "~3.3.4",
     "swagger-ui": "~2.0.24",
-    "angular-ui-router": "~0.2.15"
+    "angular-ui-router": "~0.2.15",
+    "font-awesome": "~4.3.0"
   },
   "resolutions": {
     "angular": "1.2.28"

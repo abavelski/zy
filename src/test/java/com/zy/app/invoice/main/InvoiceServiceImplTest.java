@@ -37,7 +37,7 @@ public class InvoiceServiceImplTest {
     @Test
     public void testAddToExistingInvoice() throws Exception {
         //given
-        when(invoiceDao.getSortedOpenInvoices(1)).thenReturn(Arrays.asList(InvoiceTestData.savedInvoice()));
+        when(invoiceDao.getInvoicesBySubscriptionIdAndStatus(1, Invoice.Status.OPEN)).thenReturn(Arrays.asList(InvoiceTestData.savedInvoice()));
         when(vatService.calculateVat(60d)).thenReturn(12d);
 
         Invoice updatedInvoice = InvoiceTestData.savedInvoice();
@@ -52,7 +52,7 @@ public class InvoiceServiceImplTest {
     @Test
     public void testAddToNewInvoice() throws Exception {
         //given
-        when(invoiceDao.getSortedOpenInvoices(1)).thenReturn(new ArrayList<>());
+        when(invoiceDao.getInvoicesBySubscriptionIdAndStatus(1, Invoice.Status.OPEN)).thenReturn(new ArrayList<>());
         when(invoiceDao.createInvoice(any(Invoice.class))).thenReturn(1);
         when(vatService.calculateVat(10d)).thenReturn(2d);
         when(scheduleService.getScheduleFor(InvoiceTestData.CHARGEDATE)).thenReturn(InvoiceTestData.newInvoiceSchedule());
@@ -72,7 +72,7 @@ public class InvoiceServiceImplTest {
     @Test
     public void testAddToExistingInvoiceOutsideOfOpenDates() throws Exception {
         //given
-        when(invoiceDao.getSortedOpenInvoices(1)).thenReturn(Arrays.asList(InvoiceTestData.savedInvoice()));
+        when(invoiceDao.getInvoicesBySubscriptionIdAndStatus(1, Invoice.Status.OPEN)).thenReturn(Arrays.asList(InvoiceTestData.savedInvoice()));
         when(vatService.calculateVat(60d)).thenReturn(12d);
 
         Invoice updatedInvoice = InvoiceTestData.savedInvoice();

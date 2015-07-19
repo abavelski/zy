@@ -10,12 +10,12 @@ import java.util.List;
  */
 public interface ANumberDao {
 
-    public void createANumber(ANumber aNumber);
-    public void updateANumber(ANumber aNumber);
-    public ANumber getANumber(Integer number);
-    public ANumber getReservedANumber(String reservationId);
+    void createANumber(ANumber aNumber);
+    void updateANumber(ANumber aNumber);
+    ANumber getANumber(Integer number);
+    ANumber getReservedANumber(String reservationId);
 
-    public List<Integer> getOpenNumbers(Integer nr, ANumber.Type type);
+    List<Integer> getOpenNumbers(Integer nr, ANumber.Type type);
 
 
 }

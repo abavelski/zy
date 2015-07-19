@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @Api(value = "signup", description = "Signup operations")
 @RequestMapping("/api/signup")

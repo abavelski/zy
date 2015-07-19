@@ -36,7 +36,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional
     public void addChargeToInvoice(ChargeLine chargeLine) {
-        List<Invoice> invoices = invoiceDao.getSortedOpenInvoices(chargeLine.getSubscriptionId());
+        List<Invoice> invoices = invoiceDao.getInvoicesBySubscriptionIdAndStatus(chargeLine.getSubscriptionId(), Invoice.Status.OPEN);
         boolean addedCharge = false;
         for (Invoice invoice : invoices) {
            if(isInvoiceOpenOn(invoice, chargeLine.getChargeDate())) {
@@ -79,6 +79,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         br.setStatus(BillingRecord.Status.RATED);
         billingRecordDao.updateBillingRecord(br);
     }
+
 
     private void createInvoiceLineAndUpdateInvoice(ChargeLine chargeLine, Invoice invoice) {
         createInvoiceLine(invoice, chargeLine);

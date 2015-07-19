@@ -36,8 +36,9 @@ public class FeeServiceImpl implements FeeService {
         Fee fee = feeDao.findFeeByCode(runningFee.getFeeCode());
         if (Fee.Type.ONCE.equals(fee.getType())) {
             runningFee.setStatus(RunningFee.Status.TERMINATED);
+        } else {
+            runningFee.setNextChargeDate(getNextChargeDate(fee));
         }
-        runningFee.setNextChargeDate(getNextChargeDate(fee));
         runningFeeDao.updateRunningFee(runningFee);
 
         return aChargeLine()

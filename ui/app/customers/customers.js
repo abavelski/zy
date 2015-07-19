@@ -1,4 +1,4 @@
-angular.module('customers', ['ui.bootstrap'])
+angular.module('customers', ['ui.bootstrap', 'notifications'])
 
     .config(function($stateProvider) {
 
@@ -18,11 +18,6 @@ angular.module('customers', ['ui.bootstrap'])
                     templateUrl: 'customers/subscription.tpl.html',
                     controller : 'SubscriptionCtrl'
                 })
-                .state('customer.network', {
-                    url: '/network',
-                    templateUrl: 'customers/network.tpl.html',
-                    controller : 'NetworkCtrl'
-                })
                 .state('customer.user', {
                     url: '/user',
                     templateUrl: 'customers/user.tpl.html',
@@ -30,142 +25,48 @@ angular.module('customers', ['ui.bootstrap'])
                 })
                 .state('customer.usage', {
                     url: '/usage',
-                    templateUrl: 'customers/usage.tpl.html'
+                    templateUrl: 'customers/usage.tpl.html',
+                    controller: 'UsageCtrl'
                 })
     })
-    .controller('SearchCtrl', function($scope, $location){
+    .controller('SearchCtrl', function($scope, $location, notifications){
+        $scope.notifications = notifications;
+
         $scope.toSubscription = function() {
-            $location.path('/customers/1234/subscription');
+            $location.path('/customers/'+$scope.phoneNumber+'/subscription');
         }
     })
-    .controller('CustomerCtrl', function($scope, $location){
+    .controller('CustomerCtrl', function($scope, notifications, $location, $http, $stateParams){
         $scope.isActive = function(str){ return $location.path().search(str)>-1; };
-    })
-    .controller('SubscriptionCtrl', function($scope, $modal){
-        $scope.packageOptions = function() {
-            $modal.open({
-                controller: 'PackageOptionsCtrl',
-                templateUrl: 'customers/packageOptions.tpl.html'
+        console.log($stateParams);
+        $http.get('/api/accounts/?phone='+$stateParams.anumber)
+            .success(function(data){
+                console.log(data);
+                $scope.account = data;
+            })
+            .error(function(err){
+                console.log(err);
+                notifications.set('Could not find subscription');
+                $location.path('/search');
             });
-        };  
 
-        $scope.terminateSubscription = function() {
-            $modal.open({
-                controller: 'TerminateSubscriptionCtrl',
-                templateUrl: 'customers/terminateSubscription.tpl.html'
+    })
+    .controller('SubscriptionCtrl', function($scope){})
+    .controller('UserCtrl', function($scope){})
+    .controller('UsageCtrl', function($scope, $http){
+        $http.get('/api/invoices?subscriptionId='+$scope.account.subscription.id+'&status=OPEN')
+            .success(function(invoices){
+                $scope.invoice = invoices[0];
+                $http.get('/api/invoices/'+invoices[0].id+'/lines')
+                    .success(function(lines){
+                        $scope.lines = lines;
+                    })
+                    .error(function(err){
+                        console.log('error getting invoice lines', err);
+                    });
+            })
+            .error(function(err){
+                console.log('error getting invoices', err);
             });
-        };        
-
-        $scope.blockDevice = function() {
-            $modal.open({
-                controller: 'BlockDeviceCtrl',
-                templateUrl: 'customers/blockDevice.tpl.html'
-            });
-        };
-
-        $scope.changeNumber = function() {
-            $modal.open({
-                controller: 'ChangeNumberCtrl',
-                templateUrl: 'customers/changeNumber.tpl.html'
-            });
-        };
-
-    })
-    .controller('NetworkCtrl', function($scope){})
-    
-    .controller('TerminateSubscriptionCtrl', function ($scope, $modalInstance) {
-        $scope.terminate = function () {
-            $modalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.close();
-        };
-        $scope.open = function($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-
-            $scope.opened = true;
-        };
-
-    })    
-    .controller('ChangeNumberCtrl', function ($scope, $modalInstance) {
-        $scope.numbers = ['61660020', '61660021', '61660022', '61660023', '61660024'];
-        $scope.change = function () {
-            $modalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.close();
-        };
-        $scope.open = function($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-
-            $scope.opened = true;
-        };
-
-    })
-    .controller('BlockDeviceCtrl', function ($scope, $modalInstance) {
-        
-        $scope.ok = function () {
-            $modalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.close();
-        };
-        $scope.open = function($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-
-            $scope.opened = true;
-        };
-
-    })
-    .controller('PackageOptionsCtrl', function ($scope, $modalInstance) {
-        $scope.networkOptions = [{
-            name : 'Roaming',
-            value : true
-        }, 
-        {   name: 'Data Roaming',
-            value: true
-        },
-        {   name: 'Internationsl calls',
-            value: false
-        }];
-        $scope.ok = function () {
-            $modalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.close();
-        };
-        $scope.open = function($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-
-            $scope.opened = true;
-        };
-
-    })
-    .controller('UserCtrl', function($scope, $modal){
-        $scope.editUser = function() {
-
-            $modal.open({
-                animation: true,
-                controller: 'EditUserCtrl',
-                templateUrl: 'customers/editUser.tpl.html'
-            });
-        }
-    })
-    .controller('EditUserCtrl', function ($scope, $modalInstance) {
-        $scope.save = function () {
-            $modalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.close();
-        };
     });
 

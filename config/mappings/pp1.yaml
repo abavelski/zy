@@ -4,3 +4,7 @@
       trafficType: "HOME"
       usageType: "VOICE"
       ratingCode: "voice-home"
+    -
+      trafficType: "INT"
+      usageType: "VOICE"
+      ratingCode: "voice-int"

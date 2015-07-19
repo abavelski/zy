@@ -15,18 +15,24 @@
               - 
                 ratingPlugin: "VOICESTANDARD"
                 rate: 0.19
-    - 
-      ratingCode: "voice-home2"
-      locationPlugin: "FLAT"
-      timePlugin: "FLAT"
-      rootLocation: 
-        name: "home"
-        timePlans: 
-          - 
-            charges: 
-              - 
-                ratingPlugin: "INITIAL"
-                rate: 0.49
-              - 
+    -
+      ratingCode: "voice-int"
+      locationPlugin: "BESTMATCH"
+      rootLocation:
+        name: "int"
+        timePlans:
+          -
+            charges:
+              -
                 ratingPlugin: "VOICESTANDARD"
-                rate: 0.19
+                rate: 1.99
+        children:
+          -
+            subNumber: "373"
+            name: "Moldova"
+            timePlans:
+              -
+                charges:
+                  -
+                    ratingPlugin: "VOICESTANDARD"
+                    rate: 0.99

@@ -6,16 +6,15 @@ angular.module('app', [ 'templates.app', 'templates.common', 'ui.router', 'notif
     })
 
     .controller('AppCtrl', function($scope, notifications) {
-        $scope.getNotification = function() {
-            return notifications.get();
-        };
-        $scope.removeNotification = function() {
-            notifications.remove();
-        }
+
     })
 
 
     .controller('HeaderCtrl', function ($scope, $location) {
         $scope.isActive = function(str){ return $location.path().search(str)>-1; };
         $location.path('/signup');
+
+        $scope.searchByPhone=function() {
+            $location.path('/customers/'+$scope.phoneNumber+'/subscription');
+        }
     });

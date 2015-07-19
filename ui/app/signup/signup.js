@@ -30,6 +30,7 @@ angular.module('signup', ['notifications'])
     })
 
     .controller('SignupCtrl', function ($scope, $stateParams, $location, notifications, $http) {
+
         var reservationKey;
         $scope.isActive = function(str){ return $location.path().search(str)>-1; };
         $scope.packageCode = $stateParams.package;
@@ -46,11 +47,10 @@ angular.module('signup', ['notifications'])
                 console.log('reserving: '+ $scope.selectedNumber);
                 $http.post('/api/a-number/'+$scope.selectedNumber+'/reserve')
                     .success(function(data){
-                        console.log('OK', data);
                         reservationKey = data.reservationKey;
                     })
                     .error(function(err){
-                        console.log('error', err);
+                        console.log('error reserving a phone number', err);
                     });
 
             }
@@ -76,7 +76,8 @@ angular.module('signup', ['notifications'])
         };
         $scope.user = {};
     })
-    .controller('PackagesCtrl', function($scope, $http){
+    .controller('PackagesCtrl', function($scope, $http, notifications){
+        $scope.notifications = notifications;
         $http.get('/api/signup/packages').success(function(data){
             $scope.packages = data;
         });
