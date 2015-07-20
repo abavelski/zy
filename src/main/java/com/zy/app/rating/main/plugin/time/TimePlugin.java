@@ -8,5 +8,6 @@ import java.util.List;
 public interface TimePlugin {
 
     List<Charge> getCharges(TimePlanRequest request);
+    List<String> getCampaignCodes(TimePlanRequest request);
 
 }

@@ -6,14 +6,15 @@ import com.zy.app.rating.model.TimePlan;
 import java.util.List;
 
 /**
- * aba
- * 26/02/15
+ * alexei.bavelski@gmail.com
+ * 20/07/15
  */
 public class TimePlanBuilder {
     private String code;
     private Integer startHour;
     private Integer endHour;
     private List<Charge> charges;
+    private List<String> campaigns;
 
     private TimePlanBuilder() {
     }
@@ -42,8 +43,13 @@ public class TimePlanBuilder {
         return this;
     }
 
+    public TimePlanBuilder withCampaigns(List<String> campaigns) {
+        this.campaigns = campaigns;
+        return this;
+    }
+
     public TimePlanBuilder but() {
-        return aTimePlan().withCode(code).withStartHour(startHour).withEndHour(endHour).withCharges(charges);
+        return aTimePlan().withCode(code).withStartHour(startHour).withEndHour(endHour).withCharges(charges).withCampaigns(campaigns);
     }
 
     public TimePlan build() {
@@ -52,6 +58,7 @@ public class TimePlanBuilder {
         timePlan.setStartHour(startHour);
         timePlan.setEndHour(endHour);
         timePlan.setCharges(charges);
+        timePlan.setCampaigns(campaigns);
         return timePlan;
     }
 }

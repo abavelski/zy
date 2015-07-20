@@ -18,7 +18,7 @@ public class CampaignSettingsDaoImpl implements CampaignSettingsDao {
     private String configPath;
 
     @Override
-    public <T> T readCampaignSettings(CampaignType type, String code, Class<T> settingsClass) {
+    public <T>T readCampaignSettings(CampaignType type, String code, Class<T> settingsClass) {
 
         Yaml yaml = new Yaml();
         try {

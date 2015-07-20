@@ -25,6 +25,16 @@ public class PricePlanDaoImpl implements PricePlanDao {
     private String configPath;
 
     @Override
+    public PricePlan getCampaignPlanByCode(String code) {
+        Yaml yaml = new Yaml();
+        try {
+            return yaml.loadAs(new FileInputStream(configPath+"/campaignplans/"+code+ ".yaml"), PricePlan.class);
+        } catch (Exception e) {
+            throw new RuntimeException("unable to load price plan", e);
+        }
+    }
+
+    @Override
     public PricePlan getPricePlanByCode(String code) {
         Yaml yaml = new Yaml();
         try {

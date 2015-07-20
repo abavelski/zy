@@ -72,6 +72,22 @@ public class RatingServiceImpl implements RatingService {
         return response;
     }
 
+    @Override
+    public List<String> getCampaignCodes(RatingRequest request) {
+        PricePlan pricePlan = pricePlanDao.getCampaignPlanByCode(request.getPricePlanCode());
+        TrafficPlan trafficPlan = trafficPlanService.getTrafficPlanByRatingCode(pricePlan, request.getRatingCode());
+
+        LocationPlugin locationPlugin = locationPlugins.get(trafficPlan.getLocationPlugin());
+        LocationResponse locationResponse = locationPlugin.getLocationResponse(request, trafficPlan);
+
+        TimePlugin timePlugin = timePlugins.get(trafficPlan.getTimePlugin());
+        TimePlanRequest timeRequest = aTimePlanRequest()
+                .withChargeDate(request.getChargeDate())
+                .withTimePlans(locationResponse.getTimePlans())
+                .build();
+        return timePlugin.getCampaignCodes(timeRequest);
+    }
+
 
     private List<String> getVisitedLocationsNames(LocationResponse response) {
         List<String> locationNames = new ArrayList<>();

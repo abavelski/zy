@@ -6,6 +6,7 @@ import com.zy.app.rating.model.TrafficMapping;
 import java.util.List;
 
 public interface PricePlanDao {
+    PricePlan getCampaignPlanByCode(String code);
     PricePlan getPricePlanByCode(String code);
     List<TrafficMapping> getTrafficMappingsForPricePlan(String code);
     List<String> getAllPricePlans();

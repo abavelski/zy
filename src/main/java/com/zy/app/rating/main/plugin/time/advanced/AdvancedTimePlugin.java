@@ -9,12 +9,12 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
+//TODO: fix holidays
 public class AdvancedTimePlugin implements TimePlugin {
 
 
     public static final String HOLIDAY = "hol";
     public static final String DEFAULT = "def";
-    private Map<String, List<TimePlan>> timePlansMap = new HashMap<>();
 
     private boolean isHoliday(LocalDateTime chargeDate) {
         return false;
@@ -25,15 +25,20 @@ public class AdvancedTimePlugin implements TimePlugin {
         return getSelectedPlan(request).getCharges();
     }
 
+    @Override
+    public List<String> getCampaignCodes(TimePlanRequest request) {
+        return getSelectedPlan(request).getCampaigns();
+    }
+
     private TimePlan getSelectedPlan(TimePlanRequest request) {
-        initTimePlansMap(request.getTimePlans());
+        Map<String, List<TimePlan>> timePlansMap = initTimePlansMap(request.getTimePlans());
         List<TimePlan> timePlans=null;
         if (isHoliday(request.getChargeDate()) ) {
             timePlans = timePlansMap.get(HOLIDAY);
         }
         if (timePlans==null) {
-            String day =  new SimpleDateFormat("EEE", Locale.ENGLISH).format(request.getChargeDate());
-            timePlans =  timePlansMap.get(day.toLowerCase());
+            String day = new SimpleDateFormat("EEE", Locale.ENGLISH).format(request.getChargeDate());
+            timePlans = timePlansMap.get(day.toLowerCase());
         }
         if (timePlans==null) {
             timePlans = timePlansMap.get(DEFAULT);
@@ -55,7 +60,8 @@ public class AdvancedTimePlugin implements TimePlugin {
         return selectedPlan;
     }
 
-    private void initTimePlansMap(List<TimePlan> timePlans) {
+    private Map<String, List<TimePlan>> initTimePlansMap(List<TimePlan> timePlans) {
+        Map<String, List<TimePlan>> timePlansMap = new HashMap<>();
         for (TimePlan timePlan : timePlans) {
             List<TimePlan> plans = timePlansMap.get(timePlan.getCode());
             if (plans==null) {
@@ -64,6 +70,7 @@ public class AdvancedTimePlugin implements TimePlugin {
             }
             plans.add(timePlan);
         }
+        return timePlansMap;
     }
 
 

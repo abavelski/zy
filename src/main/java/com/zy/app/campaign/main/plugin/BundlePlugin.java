@@ -49,7 +49,7 @@ public class BundlePlugin implements CampaignPlugin {
         BundleSettings settings =
                 campaignSettingsDao.readCampaignSettings(CampaignType.BUNDLE, campaignCode, BundleSettings.class);
         
-        int id = bundleDao.createBundle(aBundle()
+        bundleDao.createBundle(aBundle()
                     .withCampaignType(CampaignType.BUNDLE)
                     .withSubscriptionCampaignId(subscriptionCampaignId)
                     .withRemainingAmount(settings.getAmount())

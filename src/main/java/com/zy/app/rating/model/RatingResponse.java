@@ -9,6 +9,7 @@ public class RatingResponse {
 
     List<ChargeLine> chargeLines;
     List<String> locationNames;
+    RatingRequest ratingRequest;
 
     public List<ChargeLine> getChargeLines() {
         return chargeLines;
@@ -24,5 +25,13 @@ public class RatingResponse {
 
     public void setLocationNames(List<String> locationNames) {
         this.locationNames = locationNames;
+    }
+
+    public RatingRequest getRatingRequest() {
+        return ratingRequest;
+    }
+
+    public void setRatingRequest(RatingRequest ratingRequest) {
+        this.ratingRequest = ratingRequest;
     }
 }

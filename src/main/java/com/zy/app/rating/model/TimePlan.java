@@ -7,6 +7,7 @@ public class TimePlan {
     private Integer startHour;
     private Integer endHour;
     private List<Charge> charges;
+    private List<String> campaigns;
 
     public List<Charge> getCharges() {
         return charges;
@@ -40,6 +41,14 @@ public class TimePlan {
         this.endHour = endHour;
     }
 
+    public List<String> getCampaigns() {
+        return campaigns;
+    }
+
+    public void setCampaigns(List<String> campaigns) {
+        this.campaigns = campaigns;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,12 +56,12 @@ public class TimePlan {
 
         TimePlan timePlan = (TimePlan) o;
 
-        if (charges != null ? !charges.equals(timePlan.charges) : timePlan.charges != null) return false;
         if (code != null ? !code.equals(timePlan.code) : timePlan.code != null) return false;
-        if (endHour != null ? !endHour.equals(timePlan.endHour) : timePlan.endHour != null) return false;
         if (startHour != null ? !startHour.equals(timePlan.startHour) : timePlan.startHour != null) return false;
+        if (endHour != null ? !endHour.equals(timePlan.endHour) : timePlan.endHour != null) return false;
+        if (charges != null ? !charges.equals(timePlan.charges) : timePlan.charges != null) return false;
+        return !(campaigns != null ? !campaigns.equals(timePlan.campaigns) : timePlan.campaigns != null);
 
-        return true;
     }
 
     @Override
@@ -61,6 +70,7 @@ public class TimePlan {
         result = 31 * result + (startHour != null ? startHour.hashCode() : 0);
         result = 31 * result + (endHour != null ? endHour.hashCode() : 0);
         result = 31 * result + (charges != null ? charges.hashCode() : 0);
+        result = 31 * result + (campaigns != null ? campaigns.hashCode() : 0);
         return result;
     }
 
@@ -71,6 +81,7 @@ public class TimePlan {
                 ", startHour=" + startHour +
                 ", endHour=" + endHour +
                 ", charges=" + charges +
+                ", campaigns=" + campaigns +
                 '}';
     }
 }

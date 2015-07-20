@@ -18,4 +18,13 @@ public class FlatTimePlugin implements TimePlugin {
         return timePlans.get(0).getCharges();
     }
 
+    @Override
+    public List<String> getCampaignCodes(TimePlanRequest request) {
+        List<TimePlan> timePlans = request.getTimePlans();
+        if (timePlans==null || timePlans.size()!=1) {
+            throw new RuntimeException("Time plan not found.");
+        }
+        return timePlans.get(0).getCampaigns();
+    }
+
 }
