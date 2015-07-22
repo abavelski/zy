@@ -37,10 +37,10 @@ public class SubscriptionCampaignServiceImpl implements SubscriptionCampaignServ
     @Transactional
     public void signupToCampaign(CampaignSignupRequest request) {
         int id = subscriptionCampaignDao.createSubscriptionCampaign(aSubscriptionCampaign()
-                .withSubscriptionId(request.getSubscriptionId())
-                .withCampaignCode(request.getCampaignCode())
-                .withCampaignPlugin(request.getCampaignType())
-                .build());
+                    .withSubscriptionId(request.getSubscriptionId())
+                    .withCampaignCode(request.getCampaignCode())
+                    .withCampaignPlugin(request.getCampaignType())
+                    .build());
 
         CampaignPlugin plugin = campaignPlugins.get(request.getCampaignType());
         plugin.createNew(id, request.getCampaignCode());
@@ -55,7 +55,7 @@ public class SubscriptionCampaignServiceImpl implements SubscriptionCampaignServ
         for (SubscriptionCampaign campaign : campaigns) {
             if (campaignCodes.contains(campaign.getCampaignCode())) {
                 CampaignPlugin plugin = campaignPlugins.get(campaign.getCampaignPlugin());
-                response = plugin.rate(request, campaign.getCampaignCode());
+                response = plugin.rate(request, campaign);
             }
         }
         if (response==null) {

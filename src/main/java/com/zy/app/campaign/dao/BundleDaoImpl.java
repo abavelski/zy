@@ -21,7 +21,7 @@ public class BundleDaoImpl implements BundleDao {
     }
 
     @Override
-    public Bundle getBundleBySubscriptionCampaignIdAndCampaignType(Integer subscriptionCampaignId, CampaignType campaignType) {
+    public Bundle getBundleBySubscriptionCampaignIdAndCampaignCode(Integer subscriptionCampaignId, String campaignCode) {
         return null;
     }
 }

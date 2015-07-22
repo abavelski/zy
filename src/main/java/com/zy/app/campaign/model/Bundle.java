@@ -1,7 +1,5 @@
 package com.zy.app.campaign.model;
 
-import com.zy.app.campaign.main.CampaignType;
-
 import java.time.LocalDate;
 
 /**
@@ -11,7 +9,7 @@ import java.time.LocalDate;
 public class Bundle {
 
     private int id;
-    private CampaignType campaignType;
+    private String campaignCode;
     private int subscriptionCampaignId;
     private int remainingAmount;
     private LocalDate nextResetDate;
@@ -24,12 +22,12 @@ public class Bundle {
         this.id = id;
     }
 
-    public CampaignType getCampaignType() {
-        return campaignType;
+    public String getCampaignCode() {
+        return campaignCode;
     }
 
-    public void setCampaignType(CampaignType campaignType) {
-        this.campaignType = campaignType;
+    public void setCampaignCode(String campaignCode) {
+        this.campaignCode = campaignCode;
     }
 
     public int getSubscriptionCampaignId() {

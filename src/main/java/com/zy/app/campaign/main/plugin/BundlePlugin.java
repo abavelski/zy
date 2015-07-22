@@ -4,7 +4,9 @@ import com.zy.app.campaign.dao.BundleDao;
 import com.zy.app.campaign.dao.CampaignSettingsDao;
 import com.zy.app.campaign.main.CampaignPlugin;
 import com.zy.app.campaign.main.CampaignType;
+import com.zy.app.campaign.model.Bundle;
 import com.zy.app.campaign.model.BundleSettings;
+import com.zy.app.campaign.model.SubscriptionCampaign;
 import com.zy.app.common.main.UtilService;
 import com.zy.app.rating.model.RatingRequest;
 import com.zy.app.rating.model.RatingResponse;
@@ -30,7 +32,14 @@ public class BundlePlugin implements CampaignPlugin {
     UtilService utilService;
 
     @Override
-    public RatingResponse rate(RatingRequest request, String campaignCode) {
+    public RatingResponse rate(RatingRequest request, SubscriptionCampaign sc) {
+        BundleSettings settings =
+                campaignSettingsDao.readCampaignSettings(CampaignType.BUNDLE, sc.getCampaignCode(), BundleSettings.class);
+
+        Bundle bundle = bundleDao.getBundleBySubscriptionCampaignIdAndCampaignCode(sc.getId(), sc.getCampaignCode());
+
+
+
         return null;
     }
 
@@ -50,7 +59,7 @@ public class BundlePlugin implements CampaignPlugin {
                 campaignSettingsDao.readCampaignSettings(CampaignType.BUNDLE, campaignCode, BundleSettings.class);
         
         bundleDao.createBundle(aBundle()
-                    .withCampaignType(CampaignType.BUNDLE)
+                    .withCampaignCode(campaignCode)
                     .withSubscriptionCampaignId(subscriptionCampaignId)
                     .withRemainingAmount(settings.getAmount())
                     .withNextResetDate(getNextResetDate(settings.getPeriodType(), settings.getPeriodNumber()))

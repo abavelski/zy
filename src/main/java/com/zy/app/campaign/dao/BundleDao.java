@@ -11,6 +11,6 @@ public interface BundleDao {
 
     int createBundle( Bundle bundle);
     void updateBundle( Bundle bundle);
-    Bundle getBundleBySubscriptionCampaignIdAndCampaignType(Integer subscriptionCampaignId, CampaignType campaignType);
+    Bundle getBundleBySubscriptionCampaignIdAndCampaignCode(Integer subscriptionCampaignId, String campaignCode);
 
 }

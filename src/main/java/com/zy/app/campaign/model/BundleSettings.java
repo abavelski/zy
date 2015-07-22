@@ -13,6 +13,7 @@ public class BundleSettings {
     Integer amount;
     Period periodType;
     Integer periodNumber;
+    Integer increment;
 
     public String getCode() {
         return code;
@@ -52,5 +53,13 @@ public class BundleSettings {
 
     public void setPeriodNumber(Integer periodNumber) {
         this.periodNumber = periodNumber;
+    }
+
+    public Integer getIncrement() {
+        return increment;
+    }
+
+    public void setIncrement(Integer increment) {
+        this.increment = increment;
     }
 }

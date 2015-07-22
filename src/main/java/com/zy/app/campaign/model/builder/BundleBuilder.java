@@ -1,17 +1,16 @@
 package com.zy.app.campaign.model.builder;
 
-import com.zy.app.campaign.main.CampaignType;
 import com.zy.app.campaign.model.Bundle;
 
 import java.time.LocalDate;
 
 /**
- * alexei.bavelski@gmail.com
- * 19/07/15
+ * User: alexei.bavelski@nordea.com
+ * Date: 22-07-2015
  */
 public class BundleBuilder {
     private int id;
-    private CampaignType campaignType;
+    private String campaignCode;
     private int subscriptionCampaignId;
     private int remainingAmount;
     private LocalDate nextResetDate;
@@ -28,8 +27,8 @@ public class BundleBuilder {
         return this;
     }
 
-    public BundleBuilder withCampaignType(CampaignType campaignType) {
-        this.campaignType = campaignType;
+    public BundleBuilder withCampaignCode(String campaignCode) {
+        this.campaignCode = campaignCode;
         return this;
     }
 
@@ -49,13 +48,13 @@ public class BundleBuilder {
     }
 
     public BundleBuilder but() {
-        return aBundle().withId(id).withCampaignType(campaignType).withSubscriptionCampaignId(subscriptionCampaignId).withRemainingAmount(remainingAmount).withNextResetDate(nextResetDate);
+        return aBundle().withId(id).withCampaignCode(campaignCode).withSubscriptionCampaignId(subscriptionCampaignId).withRemainingAmount(remainingAmount).withNextResetDate(nextResetDate);
     }
 
     public Bundle build() {
         Bundle bundle = new Bundle();
         bundle.setId(id);
-        bundle.setCampaignType(campaignType);
+        bundle.setCampaignCode(campaignCode);
         bundle.setSubscriptionCampaignId(subscriptionCampaignId);
         bundle.setRemainingAmount(remainingAmount);
         bundle.setNextResetDate(nextResetDate);
