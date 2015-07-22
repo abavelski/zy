@@ -4,3 +4,4 @@
   amount: 6200
   periodType: "MONTH"
   perdiodNumber: 1
+  increment: 60

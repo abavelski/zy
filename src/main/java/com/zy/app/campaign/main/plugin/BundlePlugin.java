@@ -8,14 +8,19 @@ import com.zy.app.campaign.model.Bundle;
 import com.zy.app.campaign.model.BundleSettings;
 import com.zy.app.campaign.model.SubscriptionCampaign;
 import com.zy.app.common.main.UtilService;
+import com.zy.app.common.model.ChargeLine;
 import com.zy.app.rating.model.RatingRequest;
 import com.zy.app.rating.model.RatingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.zy.app.campaign.model.builder.BundleBuilder.aBundle;
+import static com.zy.app.common.model.ChargeLineBuilder.aChargeLine;
+import static com.zy.app.rating.model.buillder.RatingResponseBuilder.aRatingResponse;
 
 /**
  * alexei.bavelski@gmail.com
@@ -33,14 +38,41 @@ public class BundlePlugin implements CampaignPlugin {
 
     @Override
     public RatingResponse rate(RatingRequest request, SubscriptionCampaign sc) {
-        BundleSettings settings =
-                campaignSettingsDao.readCampaignSettings(CampaignType.BUNDLE, sc.getCampaignCode(), BundleSettings.class);
+        List<ChargeLine> chargeLines = new ArrayList<>();
+        RatingRequest newRatingRequest = null;
 
-        Bundle bundle = bundleDao.getBundleBySubscriptionCampaignIdAndCampaignCode(sc.getId(), sc.getCampaignCode());
+        if (request.getAmount()!=0) {
+            BundleSettings settings =
+                    campaignSettingsDao.readCampaignSettings(CampaignType.BUNDLE, sc.getCampaignCode(), BundleSettings.class);
 
+            Bundle bundle = bundleDao.getBundleBySubscriptionCampaignIdAndCampaignCode(sc.getId(), sc.getCampaignCode());
 
+            long rest = request.getAmount() % settings.getIncrement();
+            long full = request.getAmount() - rest + ( rest==0?0:settings.getIncrement() );
 
-        return null;
+            long res = bundle.getRemainingAmount()-full;
+            if (res>=0) {
+                bundle.setRemainingAmount(res);
+            } else {
+                long chargedFromCampaign = (bundle.getRemainingAmount() / settings.getIncrement()) * settings.getIncrement();
+                bundle.setRemainingAmount(bundle.getRemainingAmount() - chargedFromCampaign);
+                request.setAmount(request.getAmount()-chargedFromCampaign);
+                newRatingRequest = request;
+            }
+            bundleDao.updateBundle(bundle);
+
+            chargeLines.add(aChargeLine()
+                    .withSubscriptionId(request.getSubscriptionId())
+                    .withChargeDate(request.getChargeDate())
+                    .withDescription(settings.getDescription())
+                    .withTotal(0d)
+                    .build());
+        }
+
+        return aRatingResponse()
+                .withChargeLines(chargeLines)
+                .withRatingRequest(newRatingRequest)
+                .build();
     }
 
     @Override

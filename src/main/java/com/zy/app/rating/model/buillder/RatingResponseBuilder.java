@@ -12,7 +12,8 @@ import java.util.List;
  */
 public class RatingResponseBuilder {
     List<ChargeLine> chargeLines;
-    List<String> locationNames;RatingRequest ratingRequest;
+    List<String> locationNames;
+    RatingRequest ratingRequest;
 
     private RatingResponseBuilder() {
     }

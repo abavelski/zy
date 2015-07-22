@@ -5,14 +5,14 @@ import com.zy.app.campaign.model.Bundle;
 import java.time.LocalDate;
 
 /**
- * User: alexei.bavelski@nordea.com
- * Date: 22-07-2015
+ * alexei.bavelski@gmail.com
+ * 22/07/15
  */
 public class BundleBuilder {
     private int id;
     private String campaignCode;
     private int subscriptionCampaignId;
-    private int remainingAmount;
+    private long remainingAmount;
     private LocalDate nextResetDate;
 
     private BundleBuilder() {
@@ -37,7 +37,7 @@ public class BundleBuilder {
         return this;
     }
 
-    public BundleBuilder withRemainingAmount(int remainingAmount) {
+    public BundleBuilder withRemainingAmount(long remainingAmount) {
         this.remainingAmount = remainingAmount;
         return this;
     }
