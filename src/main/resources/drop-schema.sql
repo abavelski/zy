@@ -21,3 +21,8 @@ drop table billing_record;
 drop type billing_record_status;
 drop type usage_type;
 drop type traffic_type;
+
+drop table bundle;
+
+drop table subscription_campaign;
+drop type campaign_type;

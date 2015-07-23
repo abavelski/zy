@@ -1,3 +1,4 @@
+--drop schema
 drop table invoice;
 drop type invoice_status;
 
@@ -22,6 +23,12 @@ drop type billing_record_status;
 drop type usage_type;
 drop type traffic_type;
 
+drop table bundle;
+
+drop table subscription_campaign;
+drop type campaign_type;
+
+--create schema
 create type invoice_status as enum ('OPEN', 'CLOSED');
 
 create table invoice (
@@ -111,3 +118,18 @@ create table billing_record(
   status billing_record_status
 );
 
+create table bundle(
+  id serial primary key,
+  campaign_code text,
+  subscription_campaign_id integer,
+  remaining_amount bigint,
+  next_release_date date
+);
+
+create type campaign_type as enum('BUNDLE');
+create table subscription_campaign(
+  id serial primary key,
+  subscription_id integer,
+  campaign_plugin campaign_type,
+  campaign_code text
+)

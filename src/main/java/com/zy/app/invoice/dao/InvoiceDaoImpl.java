@@ -2,7 +2,6 @@ package com.zy.app.invoice.dao;
 
 import com.zy.app.common.dao.Dao;
 import com.zy.app.invoice.model.Invoice;
-import com.zy.app.invoice.model.InvoiceLine;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
