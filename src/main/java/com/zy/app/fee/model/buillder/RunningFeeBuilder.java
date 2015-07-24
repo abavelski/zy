@@ -4,12 +4,21 @@ import com.zy.app.fee.model.RunningFee;
 
 import java.time.LocalDate;
 
+/**
+ * User: alexei.bavelski@nordea.com
+ * Date: 24-07-2015
+ */
 public class RunningFeeBuilder {
-    private int id;
-    private String feeCode;
-    private int subscriptionId;
-    private LocalDate nextChargeDate;
-    private RunningFee.Status status;
+    int id;
+    String feeCode;
+    int subscriptionId;LocalDate nextChargeDate;RunningFee.Status status;
+
+    private RunningFeeBuilder() {
+    }
+
+    public static RunningFeeBuilder aRunningFee() {
+        return new RunningFeeBuilder();
+    }
 
     public RunningFeeBuilder withId(int id) {
         this.id = id;
@@ -36,13 +45,17 @@ public class RunningFeeBuilder {
         return this;
     }
 
+    public RunningFeeBuilder but() {
+        return aRunningFee().withId(id).withFeeCode(feeCode).withSubscriptionId(subscriptionId).withNextChargeDate(nextChargeDate).withStatus(status);
+    }
+
     public RunningFee build() {
         RunningFee runningFee = new RunningFee();
-        runningFee.setStatus(status);
-        runningFee.setSubscriptionId(subscriptionId);
         runningFee.setId(id);
         runningFee.setFeeCode(feeCode);
+        runningFee.setSubscriptionId(subscriptionId);
         runningFee.setNextChargeDate(nextChargeDate);
+        runningFee.setStatus(status);
         return runningFee;
     }
 }

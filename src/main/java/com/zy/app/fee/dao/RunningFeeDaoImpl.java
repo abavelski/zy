@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
+import static com.zy.app.fee.model.buillder.RunningFeeBuilder.aRunningFee;
+
 @Component
 public class RunningFeeDaoImpl extends Dao implements RunningFeeDao  {
 
@@ -37,17 +39,14 @@ public class RunningFeeDaoImpl extends Dao implements RunningFeeDao  {
 
     @Override
     public List<RunningFee> getReadyToChargeFees() {
-        return jdbcTemplate.query(SELECT_READY_FEES, (ResultSet rs, int rowNum) -> {
-            RunningFee fee = new RunningFeeBuilder()
+        return jdbcTemplate.query(SELECT_READY_FEES, (ResultSet rs, int rowNum) ->
+                aRunningFee()
                     .withId(rs.getInt("id"))
                     .withFeeCode(rs.getString("fee_code"))
                     .withSubscriptionId(rs.getInt("subscription_id"))
                     .withNextChargeDate(rs.getDate("next_charge_date").toLocalDate())
                     .withStatus(RunningFee.Status.valueOf(rs.getString("status")))
-                    .build();
-            return fee;
-
-        });
+                .build());
     }
 
     @Override

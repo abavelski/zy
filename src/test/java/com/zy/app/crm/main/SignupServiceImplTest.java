@@ -2,6 +2,7 @@ package com.zy.app.crm.main;
 
 import com.zy.app.anumber.dao.ANumberDao;
 import com.zy.app.anumber.model.ANumber;
+import com.zy.app.campaign.main.SubscriptionCampaignService;
 import com.zy.app.common.main.UtilService;
 import com.zy.app.crm.dao.ServiceDao;
 import com.zy.app.crm.dao.SignupPackageDao;
@@ -44,6 +45,8 @@ public class SignupServiceImplTest {
     ServiceDao serviceDao;
     @Mock
     ANumberDao aNumberDao;
+    @Mock
+    SubscriptionCampaignService subscriptionCampaignService;
 
     @InjectMocks
     SignupServiceImpl signupService;
@@ -114,7 +117,6 @@ public class SignupServiceImplTest {
         when(aNumberDao.getReservedANumber("reservation-1")).thenReturn(reservedANumber(NOW));
         when(serviceDao.createService(any(Service.class))).thenReturn(4);
         signupService.createAccount(accountSignupWithReservation());
-
         verify(aNumberDao).updateANumber(updatedANumber());
     }
 }

@@ -54,7 +54,6 @@ public class BundleDaoImpl extends Dao implements BundleDao {
 
     @Override
     public Bundle getBundleBySubscriptionCampaignIdAndCampaignCode(Integer subscriptionCampaignId, String campaignCode) {
-
         return jdbcTemplate.queryForObject("select * from bundle where subscription_campaign_id = ? and campaign_code=?",
                 new Object[]{subscriptionCampaignId, campaignCode},
                 (rs, rowNum) -> {

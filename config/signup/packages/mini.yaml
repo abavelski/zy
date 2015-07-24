@@ -1,9 +1,14 @@
 ---
+  priority: 1
   code: "mini"
   name: "Mini"
   fees: 
     - "mini"
     - "signup"
+  campaigns:
+    -
+      campaignType: "BUNDLE"
+      campaignCode: "voice120"
   pricePlanCode: "pp1"
   descriptions:
     monthlyPrice: "29"

@@ -1,13 +1,33 @@
 package com.zy.app.crm.model;
 
+import com.zy.app.campaign.model.CampaignSignupRequest;
+
 import java.util.List;
 
 public class SignupPackage {
+    int priority;
     String code;
     String name;
     List<String> fees;
+    List<CampaignSignupRequest> campaigns;
     String pricePlanCode;
     PackageDescriptions descriptions;
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public List<CampaignSignupRequest> getCampaigns() {
+        return campaigns;
+    }
+
+    public void setCampaigns(List<CampaignSignupRequest> campaigns) {
+        this.campaigns = campaigns;
+    }
 
     public String getCode() {
         return code;

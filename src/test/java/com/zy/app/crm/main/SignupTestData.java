@@ -15,6 +15,7 @@ import static com.zy.app.crm.model.builder.ServiceBuilder.aService;
 import static com.zy.app.crm.model.builder.SignupPackageBuilder.aSignupPackage;
 import static com.zy.app.crm.model.builder.SubscriptionBuilder.aSubscription;
 import static com.zy.app.crm.model.builder.UserBuilder.anUser;
+import static com.zy.app.fee.model.buillder.RunningFeeBuilder.aRunningFee;
 
 
 public class SignupTestData {
@@ -78,7 +79,7 @@ public class SignupTestData {
     }
 
     public static RunningFee newRunningFee(LocalDate today) {
-        return new RunningFeeBuilder()
+        return aRunningFee()
                 .withFeeCode("fee1")
                 .withNextChargeDate(today)
                 .withStatus(RunningFee.Status.ACTIVE)

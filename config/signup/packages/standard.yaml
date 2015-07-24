@@ -1,13 +1,18 @@
 ---
+  priority: 2
   code: "standard"
   name: "Standard"
   fees: 
     - "standard"
     - "signup"
+  campaigns:
+    -
+      campaignType: "BUNDLE"
+      campaignCode: "voice300"
   pricePlanCode: "pp1"
   descriptions:
     monthlyPrice: "69"
-    voice: "6 hours"
+    voice: "5 hours"
     data: "5 GB"
     other:
       - "4G"

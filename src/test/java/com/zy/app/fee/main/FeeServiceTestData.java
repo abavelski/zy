@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 import static com.zy.app.common.model.ChargeLineBuilder.aChargeLine;
+import static com.zy.app.fee.model.buillder.RunningFeeBuilder.aRunningFee;
 
 
 public class FeeServiceTestData {
@@ -19,7 +20,7 @@ public class FeeServiceTestData {
     public  static LocalDate NEXTCHARGEDATE = LocalDate.of(2015, Month.MARCH, 5);
 
     public static RunningFee savedRunningFee() {
-        return new RunningFeeBuilder()
+        return aRunningFee()
                 .withId(1)
                 .withFeeCode("fee1")
                 .withNextChargeDate(FEEDATE)

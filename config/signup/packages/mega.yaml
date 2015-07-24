@@ -1,13 +1,18 @@
 ---
+  priority: 3
   code: "mega"
   name: "Mega"
   fees: 
     - "mega"
     - "signup"
+  campaigns:
+    -
+      campaignType: "BUNDLE"
+      campaignCode: "voice600"
   pricePlanCode: "pp1"
   descriptions:
     monthlyPrice: "99"
-    voice: "12 hours"
+    voice: "10 hours"
     data: "20 GB"
     other:
       - "4G"

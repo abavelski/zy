@@ -1,6 +1,5 @@
 package com.zy.app.campaign.dao;
 
-import com.zy.app.campaign.main.CampaignType;
 import com.zy.app.campaign.model.Bundle;
 
 /**

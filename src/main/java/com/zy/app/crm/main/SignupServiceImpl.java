@@ -2,6 +2,8 @@ package com.zy.app.crm.main;
 
 import com.zy.app.anumber.dao.ANumberDao;
 import com.zy.app.anumber.model.ANumber;
+import com.zy.app.campaign.main.SubscriptionCampaignService;
+import com.zy.app.campaign.model.CampaignSignupRequest;
 import com.zy.app.common.main.UtilService;
 import com.zy.app.crm.dao.ServiceDao;
 import com.zy.app.crm.dao.SignupPackageDao;
@@ -13,16 +15,15 @@ import com.zy.app.crm.model.SignupPackage;
 import com.zy.app.crm.model.Subscription;
 import com.zy.app.fee.dao.RunningFeeDao;
 import com.zy.app.fee.model.RunningFee;
-import com.zy.app.fee.model.buillder.RunningFeeBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 import static com.zy.app.crm.model.builder.ServiceBuilder.aService;
 import static com.zy.app.crm.model.builder.SubscriptionBuilder.aSubscription;
+import static com.zy.app.fee.model.buillder.RunningFeeBuilder.aRunningFee;
 import static org.springframework.util.StringUtils.isEmpty;
 
 
@@ -43,17 +44,19 @@ public class SignupServiceImpl implements SignupService {
     RunningFeeDao runningFeeDao;
     @Autowired
     UtilService utilService;
+    @Autowired
+    SubscriptionCampaignService subscriptionCampaignService;
 
-    private ANumber getANumber(AccountSignup accountSignup) {
+    private ANumber getANumberByReservationKey(String reservationKey) {
         ANumber aNumber;
-        if (isEmpty(accountSignup.getReservationKey())) {
+        if (isEmpty(reservationKey)) {
             List<Integer> aNumbers = aNumberDao.getOpenNumbers(1, ANumber.Type.NORMAL);
             if (aNumbers.size()==0) {
                 throw new RuntimeException("no a-numbers available");
             }
             aNumber = aNumberDao.getANumber(aNumbers.get(0));
         } else {
-            aNumber = aNumberDao.getReservedANumber(accountSignup.getReservationKey());
+            aNumber = aNumberDao.getReservedANumber(reservationKey);
             if (aNumber==null || aNumber.getStatus()== ANumber.Status.ACTIVE) {
                 throw new RuntimeException("reserved number not found");
             }
@@ -61,7 +64,7 @@ public class SignupServiceImpl implements SignupService {
         return aNumber;
     }
 
-    private ANumber updateANumberToActive(ANumber aNumber, int serviceId) {
+    private ANumber setANumberActive(ANumber aNumber, int serviceId) {
         aNumber.setAssignedToServiceId(serviceId);
         aNumber.setStatus(ANumber.Status.ACTIVE);
         aNumber.setReservationId(null);
@@ -75,36 +78,42 @@ public class SignupServiceImpl implements SignupService {
         int userId = userDao.createUser(accountSignup.getUser());
         SignupPackage signupPackage = signupPackageDao.findPackageByCode(accountSignup.getPackageCode());
 
-        Subscription subscription = aSubscription()
+        int subscriptionId = subscriptionDao.createSubscription(
+                aSubscription()
                     .withUserId(userId)
                     .withPricePlanCode(signupPackage.getPricePlanCode())
                     .withStatus(Subscription.Status.INITIAL)
                     .withStartDate(utilService.getCurrentDateTime())
-                .build();
+                .build());
 
-        int subscriptionId = subscriptionDao.createSubscription(subscription);
+        ANumber aNumber = getANumberByReservationKey(accountSignup.getReservationKey());
 
-        ANumber aNumber = getANumber(accountSignup);
-
-        Service service = aService()
+        int serviceId = serviceDao.createService(
+                aService()
                     .withPhoneNumber(aNumber.getNumber())
                     .withStatus(Service.Status.INITIAL)
                     .withSubscriptionId(subscriptionId)
-                .build();
-
-        int serviceId = serviceDao.createService(service);
-        aNumberDao.updateANumber(updateANumberToActive(aNumber, serviceId));
+                .build());
+        setANumberActive(aNumber, serviceId);
+        aNumberDao.updateANumber(aNumber);
 
         for (String feeCode : signupPackage.getFees()) {
-            RunningFee runningFee = new RunningFeeBuilder()
-                    .withFeeCode(feeCode)
-                    .withSubscriptionId(subscriptionId)
-                    .withNextChargeDate(utilService.getCurrentDate())
-                    .withStatus(RunningFee.Status.ACTIVE)
-                    .build();
-            runningFeeDao.createRunningFee(runningFee);
+            runningFeeDao.createRunningFee(
+                        aRunningFee()
+                            .withFeeCode(feeCode)
+                            .withSubscriptionId(subscriptionId)
+                            .withNextChargeDate(utilService.getCurrentDate())
+                            .withStatus(RunningFee.Status.ACTIVE)
+                        .build());
         }
 
+        List<CampaignSignupRequest> campaigns = signupPackage.getCampaigns();
+        if (campaigns!=null) {
+            for (CampaignSignupRequest campaignRequest : campaigns) {
+                campaignRequest.setSubscriptionId(subscriptionId);
+                subscriptionCampaignService.signupToCampaign(campaignRequest);
+            }
+        }
     }
 
 }
