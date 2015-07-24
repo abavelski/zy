@@ -4,7 +4,7 @@ package com.zy.app.common.model;
 import java.time.LocalDateTime;
 
 public class ChargeLine {
-    Integer subscriptionId;
+    int subscriptionId;
     double total;
     LocalDateTime chargeDate;
     String description;
@@ -17,11 +17,11 @@ public class ChargeLine {
         this.chargeDate = chargeDate;
     }
 
-    public Integer getSubscriptionId() {
+    public int getSubscriptionId() {
         return subscriptionId;
     }
 
-    public void setSubscriptionId(Integer subscriptionId) {
+    public void setSubscriptionId(int subscriptionId) {
         this.subscriptionId = subscriptionId;
     }
 
@@ -49,11 +49,10 @@ public class ChargeLine {
 
         ChargeLine that = (ChargeLine) o;
 
+        if (subscriptionId != that.subscriptionId) return false;
         if (Double.compare(that.total, total) != 0) return false;
         if (chargeDate != null ? !chargeDate.equals(that.chargeDate) : that.chargeDate != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (subscriptionId != null ? !subscriptionId.equals(that.subscriptionId) : that.subscriptionId != null)
-            return false;
 
         return true;
     }
@@ -62,7 +61,7 @@ public class ChargeLine {
     public int hashCode() {
         int result;
         long temp;
-        result = subscriptionId != null ? subscriptionId.hashCode() : 0;
+        result = subscriptionId;
         temp = Double.doubleToLongBits(total);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (chargeDate != null ? chargeDate.hashCode() : 0);

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 
-import static com.zy.app.common.model.ChargeLineBuilder.aChargeLine;
+import static com.zy.app.common.model.builder.ChargeLineBuilder.aChargeLine;
 import static com.zy.app.invoice.model.buillder.InvoiceBuilder.anInvoice;
 import static com.zy.app.invoice.model.buillder.InvoiceLineBuilder.anInvoiceLine;
 

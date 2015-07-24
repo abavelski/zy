@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
 
-import static com.zy.app.common.model.ChargeLineBuilder.aChargeLine;
+import static com.zy.app.common.model.builder.ChargeLineBuilder.aChargeLine;
 import static com.zy.app.rating.model.buillder.ChargeBuilder.aCharge;
 import static com.zy.app.rating.model.buillder.LocationBuilder.aLocation;
 import static com.zy.app.rating.model.buillder.PricePlanBuilder.aPricePlan;
@@ -53,7 +53,7 @@ public class RatingServiceImplTest {
     Map<RatingType, RatingPlugin> ratingPlugins;
 
 
-    @Ignore
+
     @Test
     public void testFlatPricePlan() {
         Charge charge = aCharge()

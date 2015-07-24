@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.zy.app.campaign.model.builder.BundleBuilder.aBundle;
-import static com.zy.app.common.model.ChargeLineBuilder.aChargeLine;
+import static com.zy.app.common.model.builder.ChargeLineBuilder.aChargeLine;
 import static com.zy.app.rating.model.buillder.RatingResponseBuilder.aRatingResponse;
 
 /**

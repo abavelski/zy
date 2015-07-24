@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.zy.app.common.model.ChargeLineBuilder.aChargeLine;
+import static com.zy.app.common.model.builder.ChargeLineBuilder.aChargeLine;
 
 
 @Component

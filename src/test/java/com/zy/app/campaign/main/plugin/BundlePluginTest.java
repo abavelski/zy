@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.zy.app.campaign.main.plugin.BundlePluginTestData.*;
-import static com.zy.app.common.model.ChargeLineBuilder.aChargeLine;
+import static com.zy.app.common.model.builder.ChargeLineBuilder.aChargeLine;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;

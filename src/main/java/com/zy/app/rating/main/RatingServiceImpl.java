@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.zy.app.common.model.ChargeLineBuilder.aChargeLine;
+import static com.zy.app.common.model.builder.ChargeLineBuilder.aChargeLine;
 import static com.zy.app.rating.model.buillder.RatingResponseBuilder.aRatingResponse;
 import static com.zy.app.rating.model.buillder.TimePlanRequestBuilder.aTimePlanRequest;
 
