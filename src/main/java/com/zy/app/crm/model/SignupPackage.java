@@ -1,6 +1,6 @@
 package com.zy.app.crm.model;
 
-import com.zy.app.campaign.model.CampaignSignupRequest;
+import com.zy.app.rating.campaign.model.CampaignSignupRequest;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@ import com.zy.app.invoice.dao.InvoiceLineDao;
 import com.zy.app.invoice.model.Invoice;
 import com.zy.app.invoice.model.InvoiceLine;
 import com.zy.app.invoice.model.InvoiceSchedule;
-import com.zy.app.rating.model.RatingResponse;
+import com.zy.app.rating.standard.model.RatingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,25 +57,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
-    //TODO: real description service
-    private String getRatingDescription(RatingResponse response) {
-        List<String> locations = response.getLocationNames();
-        StringBuilder res = new StringBuilder();
-        for (String location : locations) {
-            res.append(location).append("=>");
-        }
-        return res.toString();
-    }
-
     @Override
     @Transactional
     public void updateInvoiceAndBillingRecord(RatingResponse response, BillingRecord br) {
-        String description = getRatingDescription(response);
         List<ChargeLine> chargeLines = response.getChargeLines();
-        for (ChargeLine chargeLine : chargeLines) {
-            chargeLine.setDescription(description+chargeLine.getDescription());
-            addChargeToInvoice(chargeLine);
-        }
+        chargeLines.forEach(this::addChargeToInvoice);
         br.setStatus(BillingRecord.Status.RATED);
         billingRecordDao.updateBillingRecord(br);
     }

@@ -1,15 +1,10 @@
 package com.zy.rest.rating;
 
 import com.wordnik.swagger.annotations.Api;
-import com.zy.app.fee.dao.FeeDao;
-import com.zy.app.fee.main.FeeService;
-import com.zy.app.fee.model.Fee;
-import com.zy.app.rating.dao.PricePlanDao;
-import com.zy.app.rating.model.PricePlan;
-import com.zy.app.rating.model.TrafficMapping;
+import com.zy.app.rating.standard.dao.PricePlanDao;
+import com.zy.app.rating.standard.model.PricePlan;
+import com.zy.app.rating.standard.model.TrafficMapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

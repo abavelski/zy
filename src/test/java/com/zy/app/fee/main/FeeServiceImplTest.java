@@ -26,6 +26,8 @@ public class FeeServiceImplTest {
     RunningFeeDao runningFeeDao;
     @Mock
     UtilService utilService;
+    @Mock
+    FeeDescriptionService feeDescriptionService;
 
     @InjectMocks
     FeeServiceImpl feeService;
@@ -34,6 +36,7 @@ public class FeeServiceImplTest {
     public void setUp() throws Exception {
         when(utilService.getCurrentDateTime()).thenReturn(CHARGEDATE);
         when(utilService.getCurrentDate()).thenReturn(FEEDATE);
+        when(feeDescriptionService.getFeeDescription(prepaidFee(), FEEDATE.minusMonths(-1))).thenReturn("my fee1");
     }
 
     @Test
@@ -59,6 +62,7 @@ public class FeeServiceImplTest {
     @Test
     public void testOnceFeeIsDeactivatedAfterCharge() {
         when(feeDao.findFeeByCode("fee1")).thenReturn(onceFee());
+        when(feeDescriptionService.getFeeDescription(onceFee(), null)).thenReturn("my fee1");
 
         //verify ONCE fee is charged and updated correctly
         ChargeLine line = feeService.chargeFee(savedRunningFee());

@@ -9,6 +9,6 @@
         timePlans: 
           - 
             campaigns:
-              - "VOICE120"
-              - "VOICE300"
-              - "VOICE600"
+              - "voice120"
+              - "voice300"
+              - "voice600"

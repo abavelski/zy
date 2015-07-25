@@ -5,7 +5,7 @@
     - 
       ratingCode: "voice-home"
       rootLocation: 
-        name: "home"
+        name: "Local call"
         timePlans: 
           - 
             charges: 
@@ -19,7 +19,7 @@
       ratingCode: "voice-int"
       locationPlugin: "BESTMATCH"
       rootLocation:
-        name: "int"
+        name: "International call"
         timePlans:
           -
             charges:

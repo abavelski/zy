@@ -1,7 +1,7 @@
 package com.zy;
 
 import com.mangofactory.swagger.plugin.EnableSwagger;
-import com.zy.app.rating.main.plugin.PluginsConfig;
+import com.zy.app.rating.standard.main.plugin.PluginsConfig;
 import com.zy.rest.JacksonConfig;
 import com.zy.rest.SwaggerConfig;
 import org.springframework.boot.SpringApplication;

@@ -1,6 +1,6 @@
 ---
   code: "standard"
-  description: "Standard package monthly fee"
+  description: "Standard package fee"
   type: "PRE"
   amount: 69
   period: "MONTH"

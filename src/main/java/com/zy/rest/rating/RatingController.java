@@ -2,7 +2,7 @@ package com.zy.rest.rating;
 
 import com.wordnik.swagger.annotations.Api;
 import com.zy.app.cdr.model.BillingRecord;
-import com.zy.app.rating.main.CdrService;
+import com.zy.app.cdr.main.CdrService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

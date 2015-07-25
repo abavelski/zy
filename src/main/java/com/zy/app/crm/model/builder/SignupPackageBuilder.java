@@ -1,6 +1,6 @@
 package com.zy.app.crm.model.builder;
 
-import com.zy.app.campaign.model.CampaignSignupRequest;
+import com.zy.app.rating.campaign.model.CampaignSignupRequest;
 import com.zy.app.crm.model.PackageDescriptions;
 import com.zy.app.crm.model.SignupPackage;
 

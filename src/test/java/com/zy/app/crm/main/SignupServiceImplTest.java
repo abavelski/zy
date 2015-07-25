@@ -2,7 +2,7 @@ package com.zy.app.crm.main;
 
 import com.zy.app.anumber.dao.ANumberDao;
 import com.zy.app.anumber.model.ANumber;
-import com.zy.app.campaign.main.SubscriptionCampaignService;
+import com.zy.app.rating.campaign.main.SubscriptionCampaignService;
 import com.zy.app.common.main.UtilService;
 import com.zy.app.crm.dao.ServiceDao;
 import com.zy.app.crm.dao.SignupPackageDao;
@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.zy.app.anumber.model.builder.ANumberBuilder.anANumber;
 import static com.zy.app.crm.main.SignupTestData.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;

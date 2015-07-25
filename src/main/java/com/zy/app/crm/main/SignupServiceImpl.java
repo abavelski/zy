@@ -2,8 +2,8 @@ package com.zy.app.crm.main;
 
 import com.zy.app.anumber.dao.ANumberDao;
 import com.zy.app.anumber.model.ANumber;
-import com.zy.app.campaign.main.SubscriptionCampaignService;
-import com.zy.app.campaign.model.CampaignSignupRequest;
+import com.zy.app.rating.campaign.main.SubscriptionCampaignService;
+import com.zy.app.rating.campaign.model.CampaignSignupRequest;
 import com.zy.app.common.main.UtilService;
 import com.zy.app.crm.dao.ServiceDao;
 import com.zy.app.crm.dao.SignupPackageDao;

@@ -28,23 +28,27 @@ public class FeeServiceImpl implements FeeService {
     RunningFeeDao runningFeeDao;
     @Autowired
     InvoiceService invoiceService;
+    @Autowired
+    FeeDescriptionService feeDescriptionService;
 
 
     @Override
     public ChargeLine chargeFee(RunningFee runningFee) {
 
         Fee fee = feeDao.findFeeByCode(runningFee.getFeeCode());
+        LocalDate nextChargeDate = null;
         if (Fee.Type.ONCE.equals(fee.getType())) {
             runningFee.setStatus(RunningFee.Status.TERMINATED);
-            runningFee.setNextChargeDate(null);
         } else {
-            runningFee.setNextChargeDate(getNextChargeDate(fee));
+            nextChargeDate = getNextChargeDate(fee);
         }
+
+        runningFee.setNextChargeDate(nextChargeDate);
         runningFeeDao.updateRunningFee(runningFee);
 
         return aChargeLine()
                     .withChargeDate(utilService.getCurrentDateTime())
-                    .withDescription(fee.getDescription())
+                    .withDescription(feeDescriptionService.getFeeDescription(fee, nextChargeDate))
                     .withSubscriptionId(runningFee.getSubscriptionId())
                     .withTotal(fee.getAmount())
                 .build();

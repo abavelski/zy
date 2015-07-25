@@ -1,6 +1,6 @@
 ---
   code: "mega"
-  description: "Mega package monthly fee"
+  description: "Mega package fee"
   type: "PRE"
   amount: 99
   period: "MONTH"
