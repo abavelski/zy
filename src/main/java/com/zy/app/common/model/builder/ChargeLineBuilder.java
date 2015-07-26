@@ -5,7 +5,7 @@ import com.zy.app.common.model.ChargeLine;
 import java.time.LocalDateTime;
 
 /**
- * User: alexei.bavelski@nordea.com
+ * User: alexei.bavelski@gmail.com
  * Date: 24-07-2015
  */
 public class ChargeLineBuilder {

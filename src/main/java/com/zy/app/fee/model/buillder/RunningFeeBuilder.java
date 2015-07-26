@@ -5,13 +5,15 @@ import com.zy.app.fee.model.RunningFee;
 import java.time.LocalDate;
 
 /**
- * User: alexei.bavelski@nordea.com
+ * User: alexei.bavelski@gmail.com
  * Date: 24-07-2015
  */
 public class RunningFeeBuilder {
     int id;
     String feeCode;
-    int subscriptionId;LocalDate nextChargeDate;RunningFee.Status status;
+    int subscriptionId;
+    LocalDate nextChargeDate;
+    RunningFee.Status status;
 
     private RunningFeeBuilder() {
     }

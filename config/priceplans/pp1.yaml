@@ -36,3 +36,12 @@
                   -
                     ratingPlugin: "VOICESTANDARD"
                     rate: 0.99
+          -
+            subNumber: "7"
+            name: "Russia"
+            timePlans:
+              -
+                charges:
+                  -
+                    ratingPlugin: "VOICESTANDARD"
+                    rate: 0.49

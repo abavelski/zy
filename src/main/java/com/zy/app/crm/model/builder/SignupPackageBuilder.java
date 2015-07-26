@@ -7,7 +7,7 @@ import com.zy.app.crm.model.SignupPackage;
 import java.util.List;
 
 /**
- * User: alexei.bavelski@nordea.com
+ * User: alexei.bavelski@gmail.com
  * Date: 24-07-2015
  */
 public class SignupPackageBuilder {

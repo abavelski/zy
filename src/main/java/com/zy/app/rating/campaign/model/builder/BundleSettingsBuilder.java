@@ -3,13 +3,14 @@ package com.zy.app.rating.campaign.model.builder;
 import com.zy.app.rating.campaign.model.BundleSettings;
 
 /**
- * User: alexei.bavelski@nordea.com
+ * User: alexei.bavelski@gmail.com
  * Date: 22-07-2015
  */
 public class BundleSettingsBuilder {
     String code;
     String description;
-    Integer amount;BundleSettings.Period periodType;
+    Integer amount;
+    BundleSettings.Period periodType;
     Integer periodNumber;
     Integer increment;
 
