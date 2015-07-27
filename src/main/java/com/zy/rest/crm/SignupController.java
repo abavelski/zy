@@ -30,7 +30,7 @@ public class SignupController {
 
     @RequestMapping(value= "/packages", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<SignupPackage>> getAllSignupPackages() {
-        return new ResponseEntity<>(signupPackageDao.getAllSignupPackages(), HttpStatus.OK);
+        return new ResponseEntity<>(signupService.getSortedSignupPackages(), HttpStatus.OK);
     }
 
     @RequestMapping(value= "/packages/{code}", method = RequestMethod.GET, produces = "application/json")

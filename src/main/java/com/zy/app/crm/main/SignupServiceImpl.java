@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static com.zy.app.crm.model.builder.ServiceBuilder.aService;
@@ -114,6 +115,13 @@ public class SignupServiceImpl implements SignupService {
                 subscriptionCampaignService.signupToCampaign(campaignRequest);
             }
         }
+    }
+
+    @Override
+    public List<SignupPackage> getSortedSignupPackages() {
+        List<SignupPackage> allSignupPackages = signupPackageDao.getAllSignupPackages();
+        allSignupPackages.sort((o1, o2) -> o1.getPriority()-o2.getPriority());
+        return allSignupPackages;
     }
 
 }
