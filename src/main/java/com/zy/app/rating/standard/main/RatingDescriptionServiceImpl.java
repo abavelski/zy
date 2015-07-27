@@ -27,7 +27,7 @@ public class RatingDescriptionServiceImpl implements RatingDescriptionService {
 
         StringBuilder description = new StringBuilder(getLocationsDescriptions(locationResponse));
         if (!"".equals(ratingPlugin.getDescriptionForInvoice())) {
-            description.append("(")
+            description.append(" (")
                     .append(ratingPlugin.getDescriptionForInvoice())
                     .append(")");
         }
@@ -40,7 +40,7 @@ public class RatingDescriptionServiceImpl implements RatingDescriptionService {
             resp.append(location.getName());
             resp.append(" ");
         }
-        return  resp.toString();
+        return  resp.toString().trim();
     }
 
 }
