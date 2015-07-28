@@ -4,6 +4,8 @@ import com.zy.app.rating.campaign.dao.SubscriptionCampaignDao;
 import com.zy.app.rating.campaign.model.SubscriptionCampaign;
 import com.zy.app.rating.standard.main.RatingService;
 import com.zy.app.rating.standard.model.RatingRequest;
+import com.zy.app.rating.standard.model.RatingResponse;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,8 @@ import java.util.Map;
 import static com.zy.app.rating.campaign.model.builder.CampaignSignupRequestBuilder.aCampaignSignupRequest;
 import static com.zy.app.rating.campaign.model.builder.SubscriptionCampaignBuilder.aSubscriptionCampaign;
 import static com.zy.app.rating.standard.model.buillder.RatingRequestBuilder.aRatingRequest;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,16 +38,20 @@ public class SubscriptionCampaignServiceImplTest {
     @Mock
     CampaignPlugin bundle;
 
+    private final SubscriptionCampaign sc = aSubscriptionCampaign()
+            .withSubscriptionId(1)
+            .withCampaignCode("c1")
+            .withCampaignPlugin(CampaignType.BUNDLE)
+            .build();
+
+    @Before
+    public void setUp() throws Exception {
+        when(campaignPlugins.get(CampaignType.BUNDLE)).thenReturn(bundle);
+    }
+
     @Test
     public void testSignupToCampaign() throws Exception {
-        SubscriptionCampaign sc = aSubscriptionCampaign()
-                .withSubscriptionId(1)
-                .withCampaignCode("c1")
-                .withCampaignPlugin(CampaignType.BUNDLE)
-                .build();
-
         when(subscriptionCampaignDao.createSubscriptionCampaign(sc)).thenReturn(23);
-        when(campaignPlugins.get(CampaignType.BUNDLE)).thenReturn(bundle);
 
         service.signupToCampaign(aCampaignSignupRequest()
                 .withCampaignCode("c1")
@@ -55,20 +63,19 @@ public class SubscriptionCampaignServiceImplTest {
         verify(bundle).createNew(23, "c1");
     }
 
-    @Ignore
     @Test
     public void testRate() throws Exception {
 
         RatingRequest request = aRatingRequest()
                 .withPricePlanCode("pp1")
-                .withRatingCode("int-voice")
-                .withAmount(61)
-                //.withChargeDate(now)
+                .withSubscriptionId(1)
                 .build();
 
         when(ratingService.getCampaignCodes(request)).thenReturn(Arrays.asList("c1", "c2"));
+        when(subscriptionCampaignDao.getSubscriptionCampaignsForSubscription(1)).thenReturn(Arrays.asList(sc));
 
-        service.rate(request);
-
+        RatingResponse ratingResponse = service.rate(request);
+        verify(bundle).rate(request, sc);
+        assertThat(ratingResponse.getRatingRequest(), equalTo(request));
     }
 }
