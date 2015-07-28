@@ -37,7 +37,9 @@ public class SubscriptionCampaignServiceImpl implements SubscriptionCampaignServ
     @Override
     @Transactional
     public void signupToCampaign(CampaignSignupRequest request) {
-        int id = subscriptionCampaignDao.createSubscriptionCampaign(aSubscriptionCampaign()
+
+        int id = subscriptionCampaignDao.createSubscriptionCampaign(
+                aSubscriptionCampaign()
                     .withSubscriptionId(request.getSubscriptionId())
                     .withCampaignCode(request.getCampaignCode())
                     .withCampaignPlugin(request.getCampaignType())

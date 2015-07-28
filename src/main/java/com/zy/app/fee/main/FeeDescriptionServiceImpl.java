@@ -22,13 +22,17 @@ public class FeeDescriptionServiceImpl implements FeeDescriptionService {
         if (Fee.Type.ONCE.equals(fee.getType())) {
             return fee.getDescription();
         } else {
-            return new StringBuilder(fee.getDescription())
-                    .append("(")
-                    .append(utilService.getCurrentDate().toString())
-                    .append( " -- ")
-                    .append(nextChargeDate.toString())
-                    .append(")").toString();
+            return fee.getDescription()+getDatesDescription(nextChargeDate);
         }
-
     }
+
+    private String getDatesDescription(LocalDate nextChargeDate) {
+        return new StringBuilder()
+                .append("(")
+                .append(utilService.getCurrentDate().toString())
+                .append( " -- ")
+                .append(nextChargeDate.toString())
+                .append(")").toString();
+    }
+
 }

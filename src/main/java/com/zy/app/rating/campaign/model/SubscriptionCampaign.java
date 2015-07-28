@@ -43,4 +43,38 @@ public class SubscriptionCampaign {
     public void setCampaignCode(String campaignCode) {
         this.campaignCode = campaignCode;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SubscriptionCampaign that = (SubscriptionCampaign) o;
+
+        if (id != that.id) return false;
+        if (subscriptionId != that.subscriptionId) return false;
+        if (campaignCode != null ? !campaignCode.equals(that.campaignCode) : that.campaignCode != null) return false;
+        if (campaignPlugin != that.campaignPlugin) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + subscriptionId;
+        result = 31 * result + (campaignPlugin != null ? campaignPlugin.hashCode() : 0);
+        result = 31 * result + (campaignCode != null ? campaignCode.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SubscriptionCampaign{" +
+                "id=" + id +
+                ", subscriptionId=" + subscriptionId +
+                ", campaignPlugin=" + campaignPlugin +
+                ", campaignCode='" + campaignCode + '\'' +
+                '}';
+    }
 }
