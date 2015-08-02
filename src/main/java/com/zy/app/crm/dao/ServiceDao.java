@@ -2,13 +2,16 @@ package com.zy.app.crm.dao;
 
 import com.zy.app.crm.model.Service;
 
+import java.util.List;
+
 /**
  * aba
  * 21/03/15
  */
 public interface ServiceDao {
 
-    public int createService(Service service);
-    public Service findServiceByPhoneNumber(Integer phoneNumber);
+    int createService(Service service);
+    Service findServiceByPhoneNumber(Integer phoneNumber);
+    List<Service> findAllServices();
 
 }

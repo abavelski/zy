@@ -1,13 +1,10 @@
 package com.zy.rest.invoice;
 
-import com.wordnik.swagger.annotations.Api;
-import com.zy.app.crm.main.AccountService;
-import com.zy.app.crm.model.Account;
 import com.zy.app.invoice.dao.InvoiceDao;
 import com.zy.app.invoice.dao.InvoiceLineDao;
-import com.zy.app.invoice.main.InvoiceService;
 import com.zy.app.invoice.model.Invoice;
 import com.zy.app.invoice.model.InvoiceLine;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

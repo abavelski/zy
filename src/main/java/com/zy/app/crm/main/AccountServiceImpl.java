@@ -10,6 +10,9 @@ import com.zy.app.crm.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.zy.app.crm.model.builder.AccountBuilder.anAccount;
 
 /**
@@ -27,6 +30,23 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     UserDao userDao;
+
+    @Override
+    public List<Account> findAllAccounts() {
+        List<Account> accounts = new ArrayList<>();
+
+        List<Service> services = serviceDao.findAllServices();
+        for (Service service : services) {
+            Subscription subscription = subscriptionDao.getSubscriptionById(service.getSubscriptionId());
+            User user = userDao.getUserById(subscription.getUserId());
+            accounts.add(anAccount()
+                    .withService(service)
+                    .withSubscription(subscription)
+                    .withUser(user)
+                    .build());
+        }
+        return accounts;
+    }
 
     @Override
     public Account findAccountByPhoneNumber(Integer phoneNumber) {

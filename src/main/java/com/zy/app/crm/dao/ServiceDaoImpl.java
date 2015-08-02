@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import static com.zy.app.crm.model.builder.ServiceBuilder.aService;
 
@@ -45,7 +46,12 @@ public class ServiceDaoImpl extends Dao implements ServiceDao {
                 new ServiceRowMapper());
     }
 
-      private class ServiceRowMapper implements RowMapper<Service> {
+    @Override
+    public List<Service> findAllServices() {
+        return jdbcTemplate.query("select * from service", new ServiceRowMapper());
+    }
+
+    private class ServiceRowMapper implements RowMapper<Service> {
         @Override
         public Service mapRow(ResultSet rs, int rowNum) throws SQLException {
             return aService()

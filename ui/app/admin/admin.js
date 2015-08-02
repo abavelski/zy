@@ -68,12 +68,11 @@ angular.module('admin', ['notifications'])
         };
 
         var myDate = function(dt, tm) {
-            return dt.getUTCFullYear() +
-                '-' + pad(dt.getUTCMonth() + 1) +
-                '-' + pad(dt.getUTCDate()) +
-                'T' + pad(tm.getUTCHours()) +
-                ':' + pad(tm.getUTCMinutes()) +
-                ':' + pad(tm.getUTCSeconds());
+            dt.setUTCHours(tm.getUTCHours());
+            dt.setUTCMinutes(tm.getUTCMinutes());
+            dt.setUTCSeconds(tm.getUTCSeconds());
+
+            return dt.getTime()/1000;
         };
 
         $scope.submitCdr = function() {

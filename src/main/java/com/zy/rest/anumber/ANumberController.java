@@ -1,9 +1,9 @@
 package com.zy.rest.anumber;
 
-import com.wordnik.swagger.annotations.Api;
 import com.zy.app.anumber.main.NumberService;
 import com.zy.app.anumber.model.ANumber;
 import com.zy.app.anumber.model.ReservationResponse;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

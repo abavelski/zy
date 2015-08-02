@@ -2,6 +2,8 @@ package com.zy.app.crm.main;
 
 import com.zy.app.crm.model.Account;
 
+import java.util.List;
+
 /**
  * alexei.bavelski@gmail.com
  * 18/07/15
@@ -9,6 +11,8 @@ import com.zy.app.crm.model.Account;
 
 public interface AccountService {
 
-    public Account findAccountByPhoneNumber(Integer phoneNumber);
+    List<Account> findAllAccounts();
+    Account findAccountByPhoneNumber(Integer phoneNumber);
+
 
 }

@@ -1,13 +1,12 @@
 package com.zy.rest.crm;
 
-import com.wordnik.swagger.annotations.Api;
 import com.zy.app.crm.main.AccountService;
 import com.zy.app.crm.model.Account;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * alexei.bavelski@gmail.com
@@ -22,8 +21,12 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
-    @RequestMapping(value="/", method = RequestMethod.GET, produces="application/json")
-    public Account getAccountByPhoneNumber(@RequestParam(value="phone") Integer phone) {
+    @RequestMapping(method = RequestMethod.GET, produces="application/json")
+    public List<Account> getAccounts() {
+        return accountService.findAllAccounts();
+
+    }    @RequestMapping(value="/{phone}", method = RequestMethod.GET, produces="application/json")
+    public Account getAccountByPhoneNumber(@PathVariable Integer phone) {
         return accountService.findAccountByPhoneNumber(phone);
     }
 

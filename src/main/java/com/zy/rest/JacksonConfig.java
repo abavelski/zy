@@ -13,12 +13,12 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 
 @Configuration
 public class JacksonConfig {
-    //final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
@@ -40,13 +40,13 @@ public class JacksonConfig {
         module.addSerializer(LocalDateTime.class, new JsonSerializer<LocalDateTime>() {
             @Override
             public void serialize(LocalDateTime value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-                jgen.writeString(value.toString());
+                jgen.writeNumber(value.toEpochSecond(ZoneOffset.UTC));
             }
         });
         module.addDeserializer(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
             @Override
             public LocalDateTime deserialize(JsonParser jp, DeserializationContext ctx) throws IOException {
-                return LocalDateTime.parse(jp.getValueAsString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                return LocalDateTime.ofEpochSecond(jp.getValueAsLong(), 0, ZoneOffset.UTC);
             }
         });
         ObjectMapper objectMapper = new ObjectMapper();

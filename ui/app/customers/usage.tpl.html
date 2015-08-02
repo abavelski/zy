@@ -24,7 +24,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="line in lines">
-        <td>{{line.chargeDate}}</td>
+        <td>{{line.chargeDate*1000 | date:"medium"}}</td>
         <td>{{line.description}}</td>
         <td>{{line.total | currency:""}} DKK</td>
     </tr>

@@ -29,8 +29,13 @@ angular.module('customers', ['ui.bootstrap', 'notifications'])
                     controller: 'UsageCtrl'
                 })
     })
-    .controller('SearchCtrl', function($scope, $location, notifications){
+    .controller('SearchCtrl', function($scope, $location, notifications, $http){
         $scope.notifications = notifications;
+
+        $http.get('/api/accounts').success(function(accounts){
+            console.log(accounts);
+            $scope.accounts = accounts;
+        });
 
         $scope.toSubscription = function() {
             $location.path('/customers/'+$scope.phoneNumber+'/subscription');
@@ -39,9 +44,8 @@ angular.module('customers', ['ui.bootstrap', 'notifications'])
     .controller('CustomerCtrl', function($scope, notifications, $location, $http, $stateParams){
         $scope.isActive = function(str){ return $location.path().search(str)>-1; };
         console.log($stateParams);
-        $http.get('/api/accounts/?phone='+$stateParams.anumber)
+        $http.get('/api/accounts/'+$stateParams.anumber)
             .success(function(data){
-                console.log(data);
                 $scope.account = data;
             })
             .error(function(err){

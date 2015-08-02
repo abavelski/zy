@@ -1,9 +1,9 @@
 package com.zy.rest.fee;
 
-import com.wordnik.swagger.annotations.Api;
 import com.zy.app.fee.dao.FeeDao;
 import com.zy.app.fee.main.FeeService;
 import com.zy.app.fee.model.Fee;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

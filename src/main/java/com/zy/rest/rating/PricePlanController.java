@@ -1,9 +1,9 @@
 package com.zy.rest.rating;
 
-import com.wordnik.swagger.annotations.Api;
 import com.zy.app.rating.standard.dao.PricePlanDao;
 import com.zy.app.rating.standard.model.PricePlan;
 import com.zy.app.rating.standard.model.TrafficMapping;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
