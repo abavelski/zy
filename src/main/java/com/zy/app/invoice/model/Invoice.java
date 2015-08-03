@@ -117,5 +117,17 @@ public class Invoice {
         return result;
     }
 
-
+    @Override
+    public String toString() {
+        return "Invoice{" +
+                "id=" + id +
+                ", subscriptionId=" + subscriptionId +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", closeDate=" + closeDate +
+                ", status=" + status +
+                ", totalExclVat=" + totalExclVat +
+                ", totalVat=" + totalVat +
+                '}';
+    }
 }

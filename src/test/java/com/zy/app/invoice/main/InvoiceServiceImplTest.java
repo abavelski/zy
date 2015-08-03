@@ -5,6 +5,7 @@ import com.zy.app.common.model.ChargeLine;
 import com.zy.app.invoice.dao.InvoiceDao;
 import com.zy.app.invoice.dao.InvoiceLineDao;
 import com.zy.app.invoice.model.*;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.zy.app.invoice.main.InvoiceTestData.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,20 +34,25 @@ public class InvoiceServiceImplTest {
     @InjectMocks
     InvoiceServiceImpl invoiceService;
 
-
+    @Before
+    public void setUp() throws Exception {
+        when(vatService.calculateVat(60d)).thenReturn(12d);
+        when(vatService.calculateVat(10d)).thenReturn(2d);
+    }
 
     @Test
     public void testAddToExistingInvoice() throws Exception {
         //given
-        when(invoiceDao.getInvoicesBySubscriptionIdAndStatus(1, Invoice.Status.OPEN)).thenReturn(Arrays.asList(InvoiceTestData.savedInvoice()));
-        when(vatService.calculateVat(60d)).thenReturn(12d);
+        when(invoiceDao.getInvoicesBySubscriptionIdAndStatus(1, Invoice.Status.OPEN)).thenReturn(Arrays.asList(savedInvoice().build()));
 
-        Invoice updatedInvoice = InvoiceTestData.savedInvoice();
-        updatedInvoice.setTotalVat(12d);
-        updatedInvoice.setTotalExclVat(60d);
+        Invoice updatedInvoice = savedInvoice().but()
+                .withTotalVat(12d)
+                .withTotalExclVat(60d)
+                .build();
+
         //verify
-        invoiceService.addChargeToInvoice(InvoiceTestData.newChargeLine());
-        verify(invoiceLineDao).createInvoiceLine(InvoiceTestData.newInvoiceLine());
+        invoiceService.addChargeToInvoice(newChargeLine().build());
+        verify(invoiceLineDao).createInvoiceLine(newInvoiceLine());
         verify(invoiceDao).updateInvoice(updatedInvoice);
     }
 
@@ -54,40 +61,65 @@ public class InvoiceServiceImplTest {
         //given
         when(invoiceDao.getInvoicesBySubscriptionIdAndStatus(1, Invoice.Status.OPEN)).thenReturn(new ArrayList<>());
         when(invoiceDao.createInvoice(any(Invoice.class))).thenReturn(1);
-        when(vatService.calculateVat(10d)).thenReturn(2d);
-        when(scheduleService.getScheduleFor(InvoiceTestData.CHARGEDATE)).thenReturn(InvoiceTestData.newInvoiceSchedule());
+        when(scheduleService.getScheduleFor(InvoiceTestData.MIDFEBRUARY)).thenReturn(februaryInvoiceSchedule());
 
-        Invoice updatedInvoice = InvoiceTestData.savedInvoice();
-        updatedInvoice.setTotalVat(2d);
-        updatedInvoice.setTotalExclVat(10d);
+        Invoice updatedInvoice = savedInvoice().but()
+                .withTotalVat(2d)
+                .withTotalExclVat(10d)
+                .build();
 
         //verify
-        invoiceService.addChargeToInvoice(InvoiceTestData.newChargeLine());
-        verify(scheduleService).getScheduleFor(InvoiceTestData.CHARGEDATE);
+        invoiceService.addChargeToInvoice(newChargeLine().build());
+        verify(scheduleService).getScheduleFor(InvoiceTestData.MIDFEBRUARY);
         verify(invoiceDao, times(1)).createInvoice(any(Invoice.class));
-        verify(invoiceLineDao).createInvoiceLine(InvoiceTestData.newInvoiceLine());
+        verify(invoiceLineDao).createInvoiceLine(newInvoiceLine());
         verify(invoiceDao).updateInvoice(updatedInvoice);
     }
 
     @Test
     public void testAddToExistingInvoiceOutsideOfOpenDates() throws Exception {
         //given
-        when(invoiceDao.getInvoicesBySubscriptionIdAndStatus(1, Invoice.Status.OPEN)).thenReturn(Arrays.asList(InvoiceTestData.savedInvoice()));
-        when(vatService.calculateVat(60d)).thenReturn(12d);
+        when(invoiceDao.getInvoicesBySubscriptionIdAndStatus(1, Invoice.Status.OPEN)).thenReturn(Arrays.asList(savedInvoice().build()));
 
-        Invoice updatedInvoice = InvoiceTestData.savedInvoice();
-        updatedInvoice.setTotalVat(12d);
-        updatedInvoice.setTotalExclVat(60d);
+        Invoice updatedInvoice = savedInvoice().but()
+                .withTotalVat(12d)
+                .withTotalExclVat(60d)
+                .build();
 
-        ChargeLine chargeLine = InvoiceTestData.newChargeLine();
-        chargeLine.setChargeDate(InvoiceTestData.OLDCHARGEDATE);
+        ChargeLine chargeLine = newChargeLine().but()
+                .withChargeDate(InvoiceTestData.MIDJANUARY)
+                .build();
 
-        InvoiceLine invoiceLine = InvoiceTestData.newInvoiceLine();
-        invoiceLine.setChargeDate(InvoiceTestData.OLDCHARGEDATE);
+        InvoiceLine invoiceLine = newInvoiceLine();
+        invoiceLine.setChargeDate(InvoiceTestData.MIDJANUARY);
 
         //verify
         invoiceService.addChargeToInvoice(chargeLine);
         verify(invoiceLineDao).createInvoiceLine(invoiceLine);
         verify(invoiceDao).updateInvoice(updatedInvoice);
+    }
+
+    @Test
+    public void testNewMonthNewInvoice() throws Exception {
+        when(invoiceDao.getInvoicesBySubscriptionIdAndStatus(1, Invoice.Status.OPEN)).thenReturn(Arrays.asList(savedInvoice().build()));
+        when(invoiceDao.createInvoice(any(Invoice.class))).thenReturn(2);
+        when(scheduleService.getScheduleFor(InvoiceTestData.MIDMARCH)).thenReturn(marchInvoiceSchedule());
+
+        ChargeLine chargeLine = newChargeLine().but()
+                .withChargeDate(InvoiceTestData.MIDMARCH)
+                .build();
+
+        invoiceService.addChargeToInvoice(chargeLine);
+        verify(invoiceDao, times(1)).createInvoice(any(Invoice.class));
+
+        Invoice updatedInvoice = savedInvoice().but()
+                .withTotalVat(2d)
+                .withTotalExclVat(10d)
+                .withId(2)
+                .withStartDate(STARTMARCH)
+                .withEndDate(ENDMARCH)
+                .build();
+        verify(invoiceDao).updateInvoice(updatedInvoice);
+
     }
 }

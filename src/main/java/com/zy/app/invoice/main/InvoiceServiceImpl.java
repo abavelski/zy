@@ -48,7 +48,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (!addedCharge) {
             if (invoices.size()>0) {
                 Invoice invoice = getLastOpenInvoice(invoices);
-                createInvoiceLineAndUpdateInvoice(chargeLine, invoice);
+                if (invoice.getEndDate().atStartOfDay().isAfter(chargeLine.getChargeDate())) {
+                    createInvoiceLineAndUpdateInvoice(chargeLine, invoice);
+                } else {
+                    createInvoiceLineAndUpdateInvoice(chargeLine, createNewInvoice(chargeLine));
+                }
+
             } else {
                 Invoice invoice = createNewInvoice(chargeLine);
                 createInvoiceLineAndUpdateInvoice(chargeLine, invoice);
