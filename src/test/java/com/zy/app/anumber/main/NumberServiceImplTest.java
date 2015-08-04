@@ -85,14 +85,14 @@ public class NumberServiceImplTest {
 
     @Test
     public void testGetRandomANumber() {
-        when(aNumberDao.getOpenNumbers(1000, ANumber.Type.NORMAL)).thenReturn(new ArrayList(Arrays.asList(1,2,3,4,5,6,7,8)));
+        when(aNumberDao.getOpenNumbers(1000, ANumber.Type.NORMAL)).thenReturn(new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8)));
         List<Integer> numbers = numberService.getRandomANumbers(4, ANumber.Type.NORMAL);
         assertThat(numbers.size(), equalTo(4));
     }
 
     @Test
     public void testGetRandomANumberNotEnough() {
-        when(aNumberDao.getOpenNumbers(1000, ANumber.Type.NORMAL)).thenReturn(new ArrayList(Arrays.asList(1,2,3,4,5)));
+        when(aNumberDao.getOpenNumbers(1000, ANumber.Type.NORMAL)).thenReturn(new ArrayList<>(Arrays.asList(1,2,3,4,5)));
         List<Integer> numbers = numberService.getRandomANumbers(10, ANumber.Type.NORMAL);
         assertThat("5 numbers are returned", numbers.size(), equalTo(5));
     }

@@ -19,9 +19,10 @@ angular.module('admin', ['notifications'])
                     	templateUrl: 'admin/cdr.tpl.html',
 					    controller: 'CdrCtrl'
                 	})
-                	.state('admin.provisioning', {
-                    	url: '/provisioning',
-                    	templateUrl: 'admin/provisioning.tpl.html'
+                	.state('admin.fees', {
+                    	url: '/fees',
+                    	templateUrl: 'admin/fees.tpl.html',
+                        controller: 'FeesCtrl'
                 	});
     })
     .controller('AdminCtrl', function ($scope, $location, notifications) {
@@ -29,6 +30,18 @@ angular.module('admin', ['notifications'])
         $scope.notifications = notifications;
 
     	$scope.isActive = function(str){ return $location.path().search(str)>-1; };
+    })
+    .controller('FeesCtrl', function ($scope, $http, notifications) {
+        $scope.chargeAllFees = function(){
+            $http.post('/api/fees/charge')
+                .success(function(){
+                    notifications.set('All fees charged.');
+                })
+                .error(function(){
+                    notifications.set('Error charging the fees.');
+                });
+
+        }
     })
     .controller('NumberRangeCtrl', function ($scope, $http, notifications) {
         $scope.numberRange = {};
@@ -44,7 +57,7 @@ angular.module('admin', ['notifications'])
                 });
         };
     })
-    .controller('CdrCtrl', function ($scope, $http) {
+    .controller('CdrCtrl', function ($scope, $http, notifications) {
         $scope.dt = new Date();
         $scope.tm = new Date();
         $scope.usageTypes = ['VOICE', 'DATA', 'SMS', 'MMS'];
@@ -56,15 +69,7 @@ angular.module('admin', ['notifications'])
         $scope.open = function($event) {
             $event.preventDefault();
             $event.stopPropagation();
-
             $scope.opened = true;
-        };
-
-        var pad = function (number) {
-            if (number < 10) {
-                return '0' + number;
-            }
-            return number;
         };
 
         var myDate = function(dt, tm) {
@@ -84,13 +89,12 @@ angular.module('admin', ['notifications'])
                 chargeDate : myDate($scope.dt, $scope.tm),
                 amount : $scope.amount
             };
-            console.log(cdr);
             $http.post('/api/billing-records/', cdr)
                 .success(function(){
-                    console.log('OK');
+                    notifications.set('Rated sucessfully');
                 })
                 .error(function(){
-                    console.log('error');
+                    notifications.set('Error!!!');
                 });
         };
 

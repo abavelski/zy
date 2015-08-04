@@ -8,6 +8,7 @@ hs_err_pid*
 
 .idea/
 *.iml
+*.log
 .DS_Store
 build/
 .gradle
