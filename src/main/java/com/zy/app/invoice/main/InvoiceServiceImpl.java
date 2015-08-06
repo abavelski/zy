@@ -71,6 +71,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         billingRecordDao.updateBillingRecord(br);
     }
 
+    @Override
+    public List<Invoice> getInvoicesForScheduleAndStatus(InvoiceSchedule schedule, Invoice.Status status) {
+        return null;
+    }
+
 
     private void createInvoiceLineAndUpdateInvoice(ChargeLine chargeLine, Invoice invoice) {
         createInvoiceLine(invoice, chargeLine);

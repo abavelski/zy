@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Locale;
 
 @Component
@@ -26,6 +27,11 @@ public class InvoiceScheduleServiceImpl implements InvoiceScheduleService {
                 .withEndDate(endDate)
                 .withDescription(month.getDisplayName(TextStyle.FULL, Locale.ENGLISH )+ " Invoice")
                 .build();
+    }
+
+    @Override
+    public List<InvoiceSchedule> getLastSchedulesFor(LocalDateTime date, int n) {
+        return null;
     }
 
 }
