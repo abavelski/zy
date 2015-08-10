@@ -3,21 +3,35 @@ module.exports = {
         options: {
             banner: '/*! <%= package.title || package.name %>-v<%= package.version %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
         },
-        src:['ui/**/*.js', '<%= package.dist %>/templates/**/*.js'],
+        src:['ui/app/**/*.js', '<%= package.dist %>/templates/**/*.js'],
+        dest:'<%= package.dist %>/app.js'
+    },
+    appMocks:{
+        options: {
+            banner: '/*! <%= package.title || package.name %>-v<%= package.version %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        },
+        src:['ui/app/**/*.js', 'ui/mocks/**/*.mock.js', '<%= package.dist %>/templates/**/*.js'],
         dest:'<%= package.dist %>/app.js'
     },
     angular: {
-        src:['bower_components/angular/angular.js',
-            'bower_components/angular-ui-router/release/angular-ui-router.js',
-            'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'],
+        src:['node_modules/angular/angular.js',
+            'node_modules/angular-ui-router/release/angular-ui-router.js',
+            'node_modules/angular-bootstrap/ui-bootstrap-tpls.js'],
+        dest: '<%= package.dist %>/angular.js'
+    },
+    angularMocks: {
+        src:['node_modules/angular/angular.js',
+            'node_modules/angular-mocks/angular-mocks.js',
+            'node_modules/angular-ui-router/release/angular-ui-router.js',
+            'node_modules/angular-bootstrap/ui-bootstrap-tpls.js'],
         dest: '<%= package.dist %>/angular.js'
     },
     jquery: {
-        src:['bower_components/jquery/dist/jquery.js'],
+        src:['node_modules/jquery/dist/jquery.js'],
         dest: '<%= package.dist %>/jquery.js'
     },
     css: {
-        src: ['bower_components/bootswatch/sandstone/bootstrap.css', 'ui/css/app.css'],
+        src: ['node_modules/bootswatch/sandstone/bootstrap.css', 'ui/css/app.css'],
         dest: '<%= package.dist %>/app.css'
     }
 };
