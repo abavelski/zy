@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NumberService {
 
-    public void createNumberRange(ANumberRange range);
-    public List<Integer> getRandomANumbers(int nr, ANumber.Type type);
-    public String reserveANumber(Integer aNumber);
+    void createNumberRange(ANumberRange range);
+    List<Integer> getRandomANumbers(int nr, ANumber.Type type);
+    String reserveANumber(Integer aNumber);
 }

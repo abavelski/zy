@@ -4,7 +4,6 @@ var myStepDefinitionsWrapper = function () {
     var chaiString = require('chai-string');
     chai.use(chaiString);
     chai.use(chaiAsPromised);
-
     var expect = chai.expect;
 
 
