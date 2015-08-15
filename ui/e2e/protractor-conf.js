@@ -7,6 +7,10 @@ exports.config = {
     capabilities: {
         'browserName': 'chrome'
     },
-    framework: 'cucumber'
+    framework: 'cucumber',
+    onPrepare: function () {
+
+        require('protractor-linkuisref-locator')(protractor);
+    }
 
 };

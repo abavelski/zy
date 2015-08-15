@@ -10,6 +10,7 @@
     "bootswatch": "^3.3.5",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
+    "chai-string": "^1.1.2",
     "font-awesome": "^4.4.0",
     "grunt": "~0.4.5",
     "grunt-contrib-clean": "^0.6.0",
@@ -19,7 +20,8 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-html2js": "^0.1.9",
     "jquery": "^2.1.4",
-    "load-grunt-config": "^0.17.2"
+    "load-grunt-config": "^0.17.2",
+    "protractor-linkuisref-locator": "^1.1.2"
   },
   "dist": "src/main/resources/static",
   "engines": {

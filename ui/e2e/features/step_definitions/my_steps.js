@@ -1,9 +1,13 @@
 var myStepDefinitionsWrapper = function () {
     var chai = require('chai');
     var chaiAsPromised = require('chai-as-promised');
+    var chaiString = require('chai-string');
+    chai.use(chaiString);
     chai.use(chaiAsPromised);
 
     var expect = chai.expect;
+
+
 
     this.Given(/^I open web app$/, function (callback) {
         browser.get('http://localhost:8080');
@@ -37,6 +41,51 @@ var myStepDefinitionsWrapper = function () {
 
     this.Then(/^click "([^"]*)" button$/, function (btnText, callback) {
         element(by.buttonText(btnText)).click();
+        callback();
+    });
+
+    this.Given(/^I go to admin tab$/, function (callback) {
+        element(by.linkUiSref('admin.numberrange')).click();
+        callback();
+    });
+
+    this.Given(/^input first number as "([^"]*)"$/, function (arg1, callback) {
+        element(by.model('numberRange.firstNumber')).sendKeys(arg1);
+        callback();
+    });
+
+    this.Given(/^input last number as "([^"]*)"$/, function (arg1, callback) {
+        element(by.model('numberRange.lastNumber')).sendKeys(arg1);
+        callback();
+    });
+
+    this.Then(/^I see message "([^"]*)"$/, function (arg1, callback) {
+        var alertMessage = element(by.css('.alert'));
+        expect(alertMessage.getText()).to.eventually.endWith(arg1).and.notify(callback);
+    });
+
+    this.Then(/^input city "([^"]*)"$/, function (arg1, callback) {
+        element(by.model('$parent.user.city')).sendKeys(arg1);
+        callback();
+    });
+
+    this.Then(/^input first name "([^"]*)"$/, function (arg1, callback) {
+        element(by.model('$parent.user.firstName')).sendKeys(arg1);
+        callback();
+    });
+
+    this.Then(/^input last name "([^"]*)"$/, function (arg1, callback) {
+        element(by.model('$parent.user.lastName')).sendKeys(arg1);
+        callback();
+    });
+
+    this.Then(/^input address "([^"]*)"$/, function (arg1, callback) {
+        element(by.model('$parent.user.address')).sendKeys(arg1);
+        callback();
+    });
+
+    this.Then(/^input zip "([^"]*)"$/, function (arg1, callback) {
+        element(by.model('$parent.user.zip')).sendKeys(arg1);
         callback();
     });
 };
