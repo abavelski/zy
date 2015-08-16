@@ -41,6 +41,10 @@ public class BundlePluginTestData {
         return voice600.build();
     }
 
+    public static Bundle bundleWith0SecondsLeft() {
+        return voice600.but().withRemainingAmount(0).build();
+    }
+
     public static Bundle bundleWith480SecondsLeft() {
         return voice600.but().withRemainingAmount(480).build();
     }

@@ -51,24 +51,27 @@ public class BundlePlugin implements CampaignPlugin {
             long full = request.getAmount() - rest + ( rest==0?0:settings.getIncrement() );
 
             long res = bundle.getRemainingAmount()-full;
+            long chargedFromCampaign;
             if (res>=0) {
+                chargedFromCampaign = full;
                 bundle.setRemainingAmount(res);
             } else {
-                long chargedFromCampaign = (bundle.getRemainingAmount() / settings.getIncrement()) * settings.getIncrement();
+                chargedFromCampaign = (bundle.getRemainingAmount() / settings.getIncrement()) * settings.getIncrement();
                 bundle.setRemainingAmount(bundle.getRemainingAmount() - chargedFromCampaign);
                 request.setAmount(request.getAmount()-chargedFromCampaign);
                 newRatingRequest = request;
             }
             bundleDao.updateBundle(bundle);
 
-            chargeLines.add(aChargeLine()
-                    .withSubscriptionId(request.getSubscriptionId())
-                    .withChargeDate(request.getChargeDate())
-                    .withDescription(settings.getDescription())
-                    .withTotal(0d)
-                    .build());
+            if (chargedFromCampaign>0) {
+                chargeLines.add(aChargeLine()
+                        .withSubscriptionId(request.getSubscriptionId())
+                        .withChargeDate(request.getChargeDate())
+                        .withDescription(settings.getDescription())
+                        .withTotal(0d)
+                        .build());
+            }
         }
-
         return aRatingResponse()
                 .withChargeLines(chargeLines)
                 .withRatingRequest(newRatingRequest)

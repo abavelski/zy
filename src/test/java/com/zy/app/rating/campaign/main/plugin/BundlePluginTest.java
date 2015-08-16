@@ -6,6 +6,7 @@ import com.zy.app.rating.campaign.main.CampaignType;
 import com.zy.app.rating.campaign.model.Bundle;
 import com.zy.app.rating.campaign.model.BundleSettings;
 import com.zy.app.common.main.UtilService;
+import com.zy.app.rating.standard.model.RatingRequest;
 import com.zy.app.rating.standard.model.RatingResponse;
 import org.junit.Before;
 import org.junit.Test;
@@ -106,9 +107,17 @@ public class BundlePluginTest {
 
         verify(bundleDao).updateBundle(voice600.but().withRemainingAmount(0).build());
         assertThat(response.getRatingRequest(), equalTo(ratingRequest.but().withAmount(80).build()));
-
     }
 
+    @Test
+    public void testBundleWith0RemainingReturnsNoChargeLinesAndOriginalRequest() {
+        when(bundleDao.getBundleBySubscriptionCampaignIdAndCampaignCode(1, "voice600"))
+                .thenReturn(bundleWith0SecondsLeft());
+        RatingRequest request = ratingRequest.but().withAmount(120).build();
 
+        RatingResponse response = bundlePlugin.rate(request, subscriptionCampaign());
+        assertThat("Original rating request is unchanged", response.getRatingRequest(), equalTo(request));
+        assertThat("No charge lines returned", response.getChargeLines().size(), equalTo(0));
 
+    }
 }
