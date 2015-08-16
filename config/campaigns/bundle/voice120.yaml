@@ -1,7 +1,7 @@
 ---
   code: "voice120"
   description: "Included in free 2h"
-  amount: 6200
+  amount: 7200
   periodType: "MONTH"
   periodNumber: 1
   increment: 60
