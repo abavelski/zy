@@ -11,6 +11,7 @@ import com.zy.app.rating.standard.model.RatingResponse;
 public interface SubscriptionCampaignService {
 
     void signupToCampaign(CampaignSignupRequest request);
+    void activateCampaignsForSubscription(Integer subscriptionId);
     RatingResponse rate(RatingRequest request);
 
 

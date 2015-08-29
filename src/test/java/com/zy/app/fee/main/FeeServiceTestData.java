@@ -3,13 +3,13 @@ package com.zy.app.fee.main;
 import com.zy.app.common.model.ChargeLine;
 import com.zy.app.fee.model.Fee;
 import com.zy.app.fee.model.RunningFee;
-import com.zy.app.fee.model.buillder.FeeBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 
 import static com.zy.app.common.model.builder.ChargeLineBuilder.aChargeLine;
+import static com.zy.app.fee.model.buillder.FeeBuilder.aFee;
 import static com.zy.app.fee.model.buillder.RunningFeeBuilder.aRunningFee;
 
 
@@ -51,7 +51,7 @@ public class FeeServiceTestData {
     }
 
     public static Fee prepaidFee() {
-        return new FeeBuilder()
+        return aFee()
                 .withDescription("my fee1")
                 .withCode("fee1")
                 .withPeriod(Fee.Period.MONTH)

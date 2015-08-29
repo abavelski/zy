@@ -43,7 +43,6 @@ angular.module('customers', ['ui.bootstrap', 'notifications'])
     })
     .controller('CustomerCtrl', function($scope, notifications, $location, $http, $stateParams){
         $scope.isActive = function(str){ return $location.path().search(str)>-1; };
-        console.log($stateParams);
         $http.get('/api/accounts/'+$stateParams.anumber)
             .success(function(data){
                 $scope.account = data;
@@ -55,7 +54,11 @@ angular.module('customers', ['ui.bootstrap', 'notifications'])
             });
 
     })
-    .controller('SubscriptionCtrl', function($scope){})
+    .controller('SubscriptionCtrl', function($scope){
+        $scope.activateSubscription = function() {
+            console.log('activating');
+        }
+    })
     .controller('UserCtrl', function($scope){})
     .controller('UsageCtrl', function($scope, $http){
         $http.get('/api/invoices?subscriptionId='+$scope.account.subscription.id+'&status=OPEN')

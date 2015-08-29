@@ -2,6 +2,7 @@ package com.zy.app.crm.main;
 
 import com.zy.app.anumber.dao.ANumberDao;
 import com.zy.app.anumber.model.ANumber;
+import com.zy.app.fee.dao.FeeDao;
 import com.zy.app.rating.campaign.main.SubscriptionCampaignService;
 import com.zy.app.common.main.UtilService;
 import com.zy.app.crm.dao.ServiceDao;
@@ -39,6 +40,8 @@ public class SignupServiceImplTest {
     @Mock
     RunningFeeDao runningFeeDao;
     @Mock
+    FeeDao feeDao;
+    @Mock
     UtilService utilService;
     @Mock
     ServiceDao serviceDao;
@@ -59,20 +62,37 @@ public class SignupServiceImplTest {
         when(utilService.getCurrentDateTime()).thenReturn(NOW);
         when(utilService.getCurrentDate()).thenReturn(TODAY);
         when(userDao.createUser(SignupTestData.newUser())).thenReturn(1);
-        when(signupPackageDao.findPackageByCode("pack1")).thenReturn(SignupTestData.newSignupPackage());
+        when(signupPackageDao.findPackageByCode("pack1")).thenReturn(PACKAGE_WITH_PRE_FEE);
+        when(signupPackageDao.findPackageByCode("pack2")).thenReturn(PACKAGE_WITH_ONCE_FEE);
         when(subscriptionDao.createSubscription(SignupTestData.newSubscription(NOW))).thenReturn(2);
         when(utilService.getRandomKey()).thenReturn("reservation-id");
+
+        when(feeDao.findFeeByCode("fee1")).thenReturn(RUNNING_FEE_PRE);
+        when(feeDao.findFeeByCode("fee2")).thenReturn(RUNNING_FEE_ONCE);
     }
 
     @Test
     public void testCreateAccount() {
         when(aNumberDao.getOpenNumbers(1, ANumber.Type.NORMAL)).thenReturn(Arrays.asList(123));
         when(aNumberDao.getANumber(123)).thenReturn(openANumber(NOW));
+
         //verify
         signupService.createAccount(newAccountSignupObject());
 
         verify(subscriptionDao).createSubscription(SignupTestData.newSubscription(NOW));
-        verify(runningFeeDao).createRunningFee(SignupTestData.newRunningFee(TODAY));
+        verify(runningFeeDao).createRunningFee(RUNNING_FEE_INITIAL);
+    }
+
+    @Test
+    public void testCreateAccountWithOnceFee() {
+        when(aNumberDao.getOpenNumbers(1, ANumber.Type.NORMAL)).thenReturn(Arrays.asList(123));
+        when(aNumberDao.getANumber(123)).thenReturn(openANumber(NOW));
+
+        //verify
+        signupService.createAccount(anotherAccountSignupObject());
+
+        verify(subscriptionDao).createSubscription(SignupTestData.newSubscription(NOW));
+        verify(runningFeeDao).createRunningFee(SignupTestData.newRunningFeeActive(TODAY));
     }
 
     @Test(expected = RuntimeException.class)

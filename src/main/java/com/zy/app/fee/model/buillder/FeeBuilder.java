@@ -2,12 +2,21 @@ package com.zy.app.fee.model.buillder;
 
 import com.zy.app.fee.model.Fee;
 
+/**
+ * alexei.bavelski@gmail.com
+ * 29/08/15
+ */
 public class FeeBuilder {
-    private String code;
-    private String description;
-    private Fee.Type type;
-    private double amount;
-    private Fee.Period period;
+    String code;
+    String description;Fee.Type type;
+    double amount;Fee.Period period;
+
+    private FeeBuilder() {
+    }
+
+    public static FeeBuilder aFee() {
+        return new FeeBuilder();
+    }
 
     public FeeBuilder withCode(String code) {
         this.code = code;
@@ -34,14 +43,17 @@ public class FeeBuilder {
         return this;
     }
 
+    public FeeBuilder but() {
+        return aFee().withCode(code).withDescription(description).withType(type).withAmount(amount).withPeriod(period);
+    }
 
     public Fee build() {
         Fee fee = new Fee();
+        fee.setCode(code);
         fee.setDescription(description);
         fee.setType(type);
-        fee.setPeriod(period);
         fee.setAmount(amount);
-        fee.setCode(code);
+        fee.setPeriod(period);
         return fee;
     }
 }

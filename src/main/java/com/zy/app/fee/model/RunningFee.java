@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class RunningFee {
 
-    public enum Status {ACTIVE, TERMINATED}
+    public enum Status {INITIAL, ACTIVE, TERMINATED}
 
     int id;
     String feeCode;

@@ -13,6 +13,7 @@ public interface AccountService {
 
     List<Account> findAllAccounts();
     Account findAccountByPhoneNumber(Integer phoneNumber);
+    Account activateAccount(Integer phoneNumber);
 
 
 }

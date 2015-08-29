@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.zy.app.common.util.DbUtil.toDB;
 import static com.zy.app.crm.model.builder.ServiceBuilder.aService;
 
 
@@ -37,6 +38,18 @@ public class ServiceDaoImpl extends Dao implements ServiceDao {
                 }, keyHolder
         );
         return keyHolder.getKey().intValue();
+    }
+
+    @Override
+    public void updateService(Service service) {
+        jdbcTemplate.update(
+                "update service set subscription_id=?, phone_number=?, status=?::service_status where id=?",
+                service.getSubscriptionId(),
+                service.getPhoneNumber(),
+                service.getStatus().toString(),
+                service.getId()
+        );
+
     }
 
     @Override

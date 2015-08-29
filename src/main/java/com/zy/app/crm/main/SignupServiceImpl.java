@@ -2,6 +2,9 @@ package com.zy.app.crm.main;
 
 import com.zy.app.anumber.dao.ANumberDao;
 import com.zy.app.anumber.model.ANumber;
+import com.zy.app.cdr.model.BillingRecord;
+import com.zy.app.fee.dao.FeeDao;
+import com.zy.app.fee.model.Fee;
 import com.zy.app.rating.campaign.main.SubscriptionCampaignService;
 import com.zy.app.rating.campaign.model.CampaignSignupRequest;
 import com.zy.app.common.main.UtilService;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
@@ -43,6 +47,8 @@ public class SignupServiceImpl implements SignupService {
     SignupPackageDao signupPackageDao;
     @Autowired
     RunningFeeDao runningFeeDao;
+    @Autowired
+    FeeDao feeDao;
     @Autowired
     UtilService utilService;
     @Autowired
@@ -99,12 +105,22 @@ public class SignupServiceImpl implements SignupService {
         aNumberDao.updateANumber(aNumber);
 
         for (String feeCode : signupPackage.getFees()) {
+            Fee fee = feeDao.findFeeByCode(feeCode);
+            RunningFee.Status status;
+            LocalDate nextChargeDate = null;
+
+            if (Fee.Type.ONCE.equals(fee.getType())) {
+                status = RunningFee.Status.ACTIVE;
+                nextChargeDate = utilService.getCurrentDate();
+            } else {
+                status = RunningFee.Status.INITIAL;
+            }
             runningFeeDao.createRunningFee(
                         aRunningFee()
                             .withFeeCode(feeCode)
                             .withSubscriptionId(subscriptionId)
-                            .withNextChargeDate(utilService.getCurrentDate())
-                            .withStatus(RunningFee.Status.ACTIVE)
+                            .withNextChargeDate(nextChargeDate)
+                            .withStatus(status)
                         .build());
         }
 

@@ -14,5 +14,6 @@ public interface CampaignPlugin {
     void resetIfNeeded(Integer subscriptionId, String campaignCode);
     String getDisplayInfo(Integer subscriptionId, String campaignCode);
     void createNew(Integer subscriptionCampaignId, String campaignCode);
+    void activate(Integer subscriptionCampaignId, String campaignCode);
 
 }

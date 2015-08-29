@@ -11,6 +11,7 @@ import java.util.List;
 public interface ServiceDao {
 
     int createService(Service service);
+    void updateService(Service service);
     Service findServiceByPhoneNumber(Integer phoneNumber);
     List<Service> findAllServices();
 

@@ -94,11 +94,20 @@ public class BundlePlugin implements CampaignPlugin {
                 campaignSettingsDao.readCampaignSettings(CampaignType.BUNDLE, campaignCode, BundleSettings.class);
         
         bundleDao.createBundle(aBundle()
-                    .withCampaignCode(campaignCode)
-                    .withSubscriptionCampaignId(subscriptionCampaignId)
-                    .withRemainingAmount(settings.getAmount())
-                    .withNextResetDate(getNextResetDate(settings.getPeriodType(), settings.getPeriodNumber()))
+                .withCampaignCode(campaignCode)
+                .withSubscriptionCampaignId(subscriptionCampaignId)
+                .withRemainingAmount(settings.getAmount())
                 .build());
+    }
+
+    @Override
+    public void activate(Integer subscriptionCampaignId, String campaignCode) {
+        BundleSettings settings =
+                campaignSettingsDao.readCampaignSettings(CampaignType.BUNDLE, campaignCode, BundleSettings.class);
+
+        Bundle bundle = bundleDao.getBundleBySubscriptionCampaignIdAndCampaignCode(subscriptionCampaignId, campaignCode);
+        bundle.setNextResetDate(getNextResetDate(settings.getPeriodType(), settings.getPeriodNumber()));
+        bundleDao.updateBundle(bundle);
     }
 
     private LocalDate getNextResetDate(BundleSettings.Period period, Integer nr) {

@@ -5,13 +5,13 @@
     </tr>
     <tr>
         <td>Start date</td>
-        <td>{{account.subscription.startDate}}</td>
+        <td>{{account.subscription.startDate*1000 | date:"medium"}}</td>
     </tr>
     <tr>
         <td>Status</td>
         <td>{{account.subscription.status}}</td>
     </tr>
-
 </table>
+<button class="btn btn-primary" ng-click="activateSubscription()">Activate</button>
 
 

@@ -50,6 +50,15 @@ public class SubscriptionCampaignServiceImpl implements SubscriptionCampaignServ
     }
 
     @Override
+    public void activateCampaignsForSubscription(Integer subscriptionId) {
+        List<SubscriptionCampaign> campaigns = subscriptionCampaignDao.getSubscriptionCampaignsForSubscription(subscriptionId);
+        for (SubscriptionCampaign subscriptionCampaign : campaigns) {
+            CampaignPlugin plugin = campaignPlugins.get(subscriptionCampaign.getCampaignPlugin());
+            plugin.activate(subscriptionCampaign.getId(), subscriptionCampaign.getCampaignCode());
+        }
+    }
+
+    @Override
     public RatingResponse rate(RatingRequest request) {
         RatingResponse response=null;
         List<String> campaignCodes = ratingService.getCampaignCodes(request);

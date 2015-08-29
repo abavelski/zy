@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import static com.zy.app.common.util.DbUtil.fromDB;
+import static com.zy.app.common.util.DbUtil.toDB;
 import static com.zy.app.crm.model.builder.SubscriptionBuilder.aSubscription;
 
 @Component
@@ -36,6 +37,17 @@ public class SubscriptionDaoImpl extends Dao implements SubscriptionDao{
                 }, keyHolder
         );
         return keyHolder.getKey().intValue();
+    }
+
+    @Override
+    public void updateSubscription(Subscription subscription) {
+        jdbcTemplate.update("update subscription set user_id = ?, start_date = ?, price_plan_code=?, " +
+                        "status=?::subscription_status where id = ?",
+                subscription.getUserId(),
+                toDB(subscription.getStartDate()),
+                subscription.getPricePlanCode(),
+                subscription.getStatus().toString(),
+                subscription.getId());
     }
 
     @Override

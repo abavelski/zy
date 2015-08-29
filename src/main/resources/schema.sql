@@ -71,7 +71,7 @@ create table subscription(
   status subscription_status
 );
 
-create type running_fee_status as enum ('ACTIVE', 'TERMINATED');
+create type running_fee_status as enum ('INITIAL', 'ACTIVE', 'TERMINATED');
 
 create table running_fee(
   id serial primary key,

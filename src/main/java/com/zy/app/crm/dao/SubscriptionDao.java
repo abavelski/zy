@@ -5,7 +5,8 @@ import com.zy.app.crm.model.Subscription;
 
 public interface SubscriptionDao {
 
-    public Integer createSubscription(Subscription subscription);
-    public Subscription getSubscriptionById(Integer id);
+    Integer createSubscription(Subscription subscription);
+    void updateSubscription(Subscription subscription);
+    Subscription getSubscriptionById(Integer id);
 
 }
