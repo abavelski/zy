@@ -67,8 +67,8 @@ public class SignupServiceImplTest {
         when(subscriptionDao.createSubscription(SignupTestData.newSubscription(NOW))).thenReturn(2);
         when(utilService.getRandomKey()).thenReturn("reservation-id");
 
-        when(feeDao.findFeeByCode("fee1")).thenReturn(RUNNING_FEE_PRE);
-        when(feeDao.findFeeByCode("fee2")).thenReturn(RUNNING_FEE_ONCE);
+        when(feeDao.findFeeByCode("fee1")).thenReturn(FEE_PRE);
+        when(feeDao.findFeeByCode("fee2")).thenReturn(FEE_ONCE);
     }
 
     @Test

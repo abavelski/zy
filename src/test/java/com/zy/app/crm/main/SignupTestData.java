@@ -70,8 +70,8 @@ public class SignupTestData {
                 .build();
     }
 
-    public static Fee RUNNING_FEE_PRE = aFee().withType(Fee.Type.PRE).build();
-    public static Fee RUNNING_FEE_ONCE = aFee().withType(Fee.Type.ONCE).build();
+    public static Fee FEE_PRE = aFee().withType(Fee.Type.PRE).build();
+    public static Fee FEE_ONCE = aFee().withType(Fee.Type.ONCE).build();
 
 
     private static SignupPackageBuilder spb =aSignupPackage()
