@@ -12,6 +12,7 @@
         <td>{{account.subscription.status}}</td>
     </tr>
 </table>
-<button class="btn btn-primary" ng-click="activateSubscription()">Activate</button>
+<button class="btn btn-primary" ng-show="account.subscription.status==='INITIAL'"
+        ng-click="activateSubscription()">Activate</button>
 
 

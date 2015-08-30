@@ -33,7 +33,6 @@ angular.module('customers', ['ui.bootstrap', 'notifications'])
         $scope.notifications = notifications;
 
         $http.get('/api/accounts').success(function(accounts){
-            console.log(accounts);
             $scope.accounts = accounts;
         });
 
@@ -48,29 +47,41 @@ angular.module('customers', ['ui.bootstrap', 'notifications'])
                 $scope.account = data;
             })
             .error(function(err){
-                console.log(err);
                 notifications.set('Could not find subscription');
                 $location.path('/search');
             });
 
     })
-    .controller('SubscriptionCtrl', function($scope){
+    .controller('SubscriptionCtrl', function($scope, $http, notifications){
+
         $scope.activateSubscription = function() {
             console.log('activating');
+            $http.post('/api/accounts/'+$scope.account.service.phoneNumber+'/activate')
+                .success(function(data){
+                    notifications.set('Account activated');
+                    $scope.account = data;
+                })
+                .error(function(){
+                    notifications.set('Failed activating account');
+                });
         }
     })
     .controller('UserCtrl', function($scope){})
     .controller('UsageCtrl', function($scope, $http){
+        $scope.lines = [];
         $http.get('/api/invoices?subscriptionId='+$scope.account.subscription.id+'&status=OPEN')
             .success(function(invoices){
-                $scope.invoice = invoices[0];
-                $http.get('/api/invoices/'+invoices[0].id+'/lines')
-                    .success(function(lines){
-                        $scope.lines = lines;
-                    })
-                    .error(function(err){
-                        console.log('error getting invoice lines', err);
-                    });
+                if (invoices.length>0) {
+                    console.log(invoices);
+                    $scope.invoice = invoices[0];
+                    $http.get('/api/invoices/'+invoices[0].id+'/lines')
+                        .success(function(lines){
+                            $scope.lines = lines;
+                        })
+                        .error(function(err){
+                            console.log('error getting invoice lines', err);
+                        });
+                }
             })
             .error(function(err){
                 console.log('error getting invoices', err);

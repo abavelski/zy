@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.zy.app.crm.model.builder.AccountBuilder.anAccount;
@@ -57,7 +59,14 @@ public class AccountServiceImpl implements AccountService {
                     .withUser(user)
                     .build());
         }
+        return sortAccountsByStartDateDescending(accounts);
+    }
+
+    private List<Account> sortAccountsByStartDateDescending(List<Account> accounts) {
+        Collections.sort(accounts, (o1, o2) -> o2.getSubscription().getStartDate()
+                .compareTo(o1.getSubscription().getStartDate()));
         return accounts;
+
     }
 
     @Override
