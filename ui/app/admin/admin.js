@@ -25,20 +25,17 @@ angular.module('admin', ['notifications'])
                         controller: 'FeesCtrl'
                 	});
     })
-    .controller('AdminCtrl', function ($scope, $location, notifications) {
-
-        $scope.notifications = notifications;
-
+    .controller('AdminCtrl', function ($scope, $location) {
     	$scope.isActive = function(str){ return $location.path().search(str)>-1; };
     })
     .controller('FeesCtrl', function ($scope, $http, notifications) {
         $scope.chargeAllFees = function(){
             $http.post('/api/fees/charge')
                 .success(function(){
-                    notifications.set('All fees charged.');
+                    notifications.success('All fees charged.');
                 })
                 .error(function(){
-                    notifications.set('Error charging the fees.');
+                    notifications.error('Error charging the fees.');
                 });
 
         }
@@ -46,14 +43,13 @@ angular.module('admin', ['notifications'])
     .controller('NumberRangeCtrl', function ($scope, $http, notifications) {
         $scope.numberRange = {};
         $scope.submitRange = function() {
-            console.log('Range:', $scope.numberRange.firstNumber, $scope.numberRange.lastNumber);
             $http.post('/api/number-range', $scope.numberRange)
                 .success(function(){
-                    notifications.set('A-Numbers created');
+                    notifications.success('A-Numbers created');
                     $scope.numberRange = {};
                 })
                 .error(function(){
-                    notifications.set('A-Numbers NOT created');
+                    notifications.error('A-Numbers NOT created');
                 });
         };
     })
@@ -91,10 +87,10 @@ angular.module('admin', ['notifications'])
             };
             $http.post('/api/billing-records/', cdr)
                 .success(function(){
-                    notifications.set('Rated sucessfully');
+                    notifications.success('Rated sucessfully');
                 })
                 .error(function(){
-                    notifications.set('Error!!!');
+                    notifications.error('Error!!!');
                 });
         };
 

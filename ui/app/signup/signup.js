@@ -62,11 +62,11 @@ angular.module('signup', ['notifications'])
 
                 })
                     .success(function(){
-                        notifications.set('Signup successful!');
+                        notifications.success('Signup successful!');
                         $location.path('/');
                     })
                     .error(function(){
-                        notifications.set('Error!');
+                        notifications.error('Error!');
                         $location.path('/');
                     });
 

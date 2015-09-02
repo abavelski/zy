@@ -5,11 +5,8 @@ angular.module('app', [ 'templates.app', 'templates.common', 'ui.router', 'notif
         $urlRouterProvider.otherwise('/signup');
     })
 
-    .controller('AppCtrl', function($scope, notifications) {
-
+    .controller('AppCtrl', function($scope) {
     })
-
-
     .controller('HeaderCtrl', function ($scope, $location) {
         $scope.isActive = function(str){ return $location.path().search(str)>-1; };
         $location.path('/signup');

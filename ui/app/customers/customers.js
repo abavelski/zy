@@ -47,7 +47,7 @@ angular.module('customers', ['ui.bootstrap', 'notifications'])
                 $scope.account = data;
             })
             .error(function(err){
-                notifications.set('Could not find subscription');
+                notifications.error('Could not find subscription');
                 $location.path('/search');
             });
 
@@ -58,11 +58,11 @@ angular.module('customers', ['ui.bootstrap', 'notifications'])
             console.log('activating');
             $http.post('/api/accounts/'+$scope.account.service.phoneNumber+'/activate')
                 .success(function(data){
-                    notifications.set('Account activated');
+                    notifications.success('Account activated');
                     $scope.account = data;
                 })
                 .error(function(){
-                    notifications.set('Failed activating account');
+                    notifications.error('Failed activating account');
                 });
         }
     })
