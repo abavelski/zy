@@ -18,4 +18,9 @@ public class VatServiceImpl implements VatService {
     public double calculateVat(double totalExclVat) {
         return totalExclVat*vatPct/100;
     }
+
+    @Override
+    public double calculateExclVat(double total) {
+        return total/(1+vatPct/100);
+    }
 }

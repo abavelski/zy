@@ -37,33 +37,63 @@ public class BundlePlugin implements CampaignPlugin {
     UtilService utilService;
 
     @Override
-    public RatingResponse rate(RatingRequest request, SubscriptionCampaign sc) {
-        List<ChargeLine> chargeLines = new ArrayList<>();
+    public RatingResponse estimate(RatingRequest request, SubscriptionCampaign sc) {
         RatingRequest newRatingRequest = null;
+        long grantedUnits = 0;
 
-        if (request.getAmount()!=0) {
+        if (request.getUnits()!=0) {
             BundleSettings settings =
                     campaignSettingsDao.readCampaignSettings(CampaignType.BUNDLE, sc.getCampaignCode(), BundleSettings.class);
 
             Bundle bundle = bundleDao.getBundleBySubscriptionCampaignIdAndCampaignCode(sc.getId(), sc.getCampaignCode());
 
-            long rest = request.getAmount() % settings.getIncrement();
-            long full = request.getAmount() - rest + ( rest==0?0:settings.getIncrement() );
-
+            long rest = request.getUnits() % settings.getIncrement();
+            long full = request.getUnits() - rest + ( rest==0?0:settings.getIncrement() );
             long res = bundle.getRemainingAmount()-full;
-            long chargedFromCampaign;
+
+
+            if (res<0) {
+                grantedUnits = (bundle.getRemainingAmount() / settings.getIncrement()) * settings.getIncrement();
+                request.setUnits(request.getUnits() - grantedUnits);
+                newRatingRequest = request;
+            } else {
+                grantedUnits=request.getUnits();
+            }
+        }
+
+        return aRatingResponse()
+                .withRatingRequest(newRatingRequest)
+                .withGrantedUnits(grantedUnits)
+                .build();
+    }
+
+    @Override
+    public RatingResponse rate(RatingRequest request, SubscriptionCampaign sc) {
+        List<ChargeLine> chargeLines = new ArrayList<>();
+        RatingRequest newRatingRequest = null;
+
+        if (request.getUnits()!=0) {
+            BundleSettings settings =
+                    campaignSettingsDao.readCampaignSettings(CampaignType.BUNDLE, sc.getCampaignCode(), BundleSettings.class);
+
+            Bundle bundle = bundleDao.getBundleBySubscriptionCampaignIdAndCampaignCode(sc.getId(), sc.getCampaignCode());
+
+            long rest = request.getUnits() % settings.getIncrement();
+            long full = request.getUnits() - rest + ( rest==0?0:settings.getIncrement() );
+            long res = bundle.getRemainingAmount()-full;
+            long charged;
             if (res>=0) {
-                chargedFromCampaign = full;
+                charged = full;
                 bundle.setRemainingAmount(res);
             } else {
-                chargedFromCampaign = (bundle.getRemainingAmount() / settings.getIncrement()) * settings.getIncrement();
-                bundle.setRemainingAmount(bundle.getRemainingAmount() - chargedFromCampaign);
-                request.setAmount(request.getAmount()-chargedFromCampaign);
+                charged = (bundle.getRemainingAmount() / settings.getIncrement()) * settings.getIncrement();
+                bundle.setRemainingAmount(bundle.getRemainingAmount() - charged);
+                request.setUnits(request.getUnits() - charged);
                 newRatingRequest = request;
             }
             bundleDao.updateBundle(bundle);
 
-            if (chargedFromCampaign>0) {
+            if (charged>0) {
                 chargeLines.add(aChargeLine()
                         .withSubscriptionId(request.getSubscriptionId())
                         .withChargeDate(request.getChargeDate())
@@ -79,9 +109,7 @@ public class BundlePlugin implements CampaignPlugin {
     }
 
     @Override
-    public void resetIfNeeded(Integer subscriptionId, String campaignCode) {
-
-    }
+    public void resetIfNeeded(Integer subscriptionId, String campaignCode) {}
 
     @Override
     public String getDisplayInfo(Integer subscriptionId, String campaignCode) {

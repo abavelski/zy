@@ -10,13 +10,30 @@ import java.time.LocalDateTime;
 
 public class RatingRequest {
 
+    private String sessionKey;
     private String pricePlanCode;
     private String ratingCode;
-    private long amount;
+    private long units;
     private String destination;
     private LocalDateTime chargeDate;
     private int referenceId;
     private int subscriptionId;
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    public void setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+    }
+
+    public long getUnits() {
+        return units;
+    }
+
+    public void setUnits(long units) {
+        this.units = units;
+    }
 
     public String getPricePlanCode() {
         return pricePlanCode;
@@ -32,14 +49,6 @@ public class RatingRequest {
 
     public void setRatingCode(String ratingCode) {
         this.ratingCode = ratingCode;
-    }
-
-    public long getAmount() {
-        return amount;
-    }
-
-    public void setAmount(long amount) {
-        this.amount = amount;
     }
 
     public String getDestination() {
@@ -74,6 +83,7 @@ public class RatingRequest {
         this.subscriptionId = subscriptionId;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,23 +91,24 @@ public class RatingRequest {
 
         RatingRequest that = (RatingRequest) o;
 
-        if (amount != that.amount) return false;
+        if (units != that.units) return false;
         if (referenceId != that.referenceId) return false;
         if (subscriptionId != that.subscriptionId) return false;
-        if (chargeDate != null ? !chargeDate.equals(that.chargeDate) : that.chargeDate != null) return false;
-        if (destination != null ? !destination.equals(that.destination) : that.destination != null) return false;
+        if (sessionKey != null ? !sessionKey.equals(that.sessionKey) : that.sessionKey != null) return false;
         if (pricePlanCode != null ? !pricePlanCode.equals(that.pricePlanCode) : that.pricePlanCode != null)
             return false;
         if (ratingCode != null ? !ratingCode.equals(that.ratingCode) : that.ratingCode != null) return false;
+        if (destination != null ? !destination.equals(that.destination) : that.destination != null) return false;
+        return !(chargeDate != null ? !chargeDate.equals(that.chargeDate) : that.chargeDate != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = pricePlanCode != null ? pricePlanCode.hashCode() : 0;
+        int result = sessionKey != null ? sessionKey.hashCode() : 0;
+        result = 31 * result + (pricePlanCode != null ? pricePlanCode.hashCode() : 0);
         result = 31 * result + (ratingCode != null ? ratingCode.hashCode() : 0);
-        result = 31 * result + (int) (amount ^ (amount >>> 32));
+        result = 31 * result + (int) (units ^ (units >>> 32));
         result = 31 * result + (destination != null ? destination.hashCode() : 0);
         result = 31 * result + (chargeDate != null ? chargeDate.hashCode() : 0);
         result = 31 * result + referenceId;
@@ -108,9 +119,10 @@ public class RatingRequest {
     @Override
     public String toString() {
         return "RatingRequest{" +
-                "pricePlanCode='" + pricePlanCode + '\'' +
+                "sessionKey='" + sessionKey + '\'' +
+                ", pricePlanCode='" + pricePlanCode + '\'' +
                 ", ratingCode='" + ratingCode + '\'' +
-                ", amount=" + amount +
+                ", units=" + units +
                 ", destination='" + destination + '\'' +
                 ", chargeDate=" + chargeDate +
                 ", referenceId=" + referenceId +

@@ -1,4 +1,4 @@
-package com.zy.app.rating.campaign.main.plugin;
+package com.zy.app.rating;
 
 import com.zy.app.rating.campaign.model.Bundle;
 import com.zy.app.rating.campaign.model.BundleSettings;
@@ -18,7 +18,7 @@ import static com.zy.app.rating.standard.model.buillder.RatingRequestBuilder.aRa
  * User: alexei.bavelski@gmail.com
  * Date: 22-07-2015
  */
-public class BundlePluginTestData {
+public class BundleTestData {
 
     public  static LocalDateTime CHARGEDATE = LocalDateTime.of(2015, Month.FEBRUARY, 5, 8, 0);
 
@@ -45,11 +45,13 @@ public class BundlePluginTestData {
         return voice600.but().withRemainingAmount(0).build();
     }
 
+    public static Bundle bundleWith10SecondsLeft() {
+        return voice600.but().withRemainingAmount(10).build();
+    }
+
     public static Bundle bundleWith480SecondsLeft() {
         return voice600.but().withRemainingAmount(480).build();
     }
-
-
 
     public static SubscriptionCampaign subscriptionCampaign() {
         return aSubscriptionCampaign()

@@ -99,7 +99,7 @@ public class RatingServiceImplTest {
         RatingRequest request = aRatingRequest()
                     .withPricePlanCode("pp1")
                     .withRatingCode("int-voice")
-                    .withAmount(61)
+                    .withUnits(61)
                     .withChargeDate(now)
                 .build();
 

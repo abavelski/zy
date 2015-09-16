@@ -8,11 +8,11 @@ import java.util.List;
 
 /**
  * alexei.bavelski@gmail.com
- * 20/07/15
+ * 13/09/15
  */
 public class RatingResponseBuilder {
-    List<ChargeLine> chargeLines;
-    RatingRequest ratingRequest;
+    List<ChargeLine> chargeLines;RatingRequest ratingRequest;
+    long grantedUnits;
 
     private RatingResponseBuilder() {
     }
@@ -31,14 +31,20 @@ public class RatingResponseBuilder {
         return this;
     }
 
+    public RatingResponseBuilder withGrantedUnits(long grantedUnits) {
+        this.grantedUnits = grantedUnits;
+        return this;
+    }
+
     public RatingResponseBuilder but() {
-        return aRatingResponse().withChargeLines(chargeLines).withRatingRequest(ratingRequest);
+        return aRatingResponse().withChargeLines(chargeLines).withRatingRequest(ratingRequest).withGrantedUnits(grantedUnits);
     }
 
     public RatingResponse build() {
         RatingResponse ratingResponse = new RatingResponse();
         ratingResponse.setChargeLines(chargeLines);
         ratingResponse.setRatingRequest(ratingRequest);
+        ratingResponse.setGrantedUnits(grantedUnits);
         return ratingResponse;
     }
 }

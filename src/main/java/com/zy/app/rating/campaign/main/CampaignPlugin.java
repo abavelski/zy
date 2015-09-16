@@ -10,6 +10,7 @@ import com.zy.app.rating.standard.model.RatingResponse;
  */
 public interface CampaignPlugin {
 
+    RatingResponse estimate(RatingRequest request, SubscriptionCampaign campaign);
     RatingResponse rate (RatingRequest request, SubscriptionCampaign campaign);
     void resetIfNeeded(Integer subscriptionId, String campaignCode);
     String getDisplayInfo(Integer subscriptionId, String campaignCode);

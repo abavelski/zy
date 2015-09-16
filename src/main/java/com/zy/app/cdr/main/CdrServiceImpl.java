@@ -53,7 +53,7 @@ public class CdrServiceImpl implements CdrService {
         br.setStatus(BillingRecord.Status.INITIAL);
         int billingRecordId = billingRecordDao.insertBillingRecord(br);
         RatingRequest request = aRatingRequest()
-                    .withAmount(br.getAmount())
+                    .withUnits(br.getAmount())
                     .withDestination(br.getDestination())
                     .withChargeDate(br.getChargeDate())
                     .withPricePlanCode(subscription.getPricePlanCode())

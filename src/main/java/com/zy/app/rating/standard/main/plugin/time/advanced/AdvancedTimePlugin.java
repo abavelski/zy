@@ -1,24 +1,22 @@
 package com.zy.app.rating.standard.main.plugin.time.advanced;
 
-import com.zy.app.rating.standard.model.TimePlanRequest;
+import com.zy.app.rating.standard.main.HolidayService;
 import com.zy.app.rating.standard.main.plugin.time.TimePlugin;
 import com.zy.app.rating.standard.model.Charge;
 import com.zy.app.rating.standard.model.TimePlan;
+import com.zy.app.rating.standard.model.TimePlanRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.*;
 
-//TODO: fix holidays
 public class AdvancedTimePlugin implements TimePlugin {
-
 
     public static final String HOLIDAY = "hol";
     public static final String DEFAULT = "def";
 
-    private boolean isHoliday(LocalDateTime chargeDate) {
-        return false;
-    }
+    @Autowired
+    HolidayService holidayService;
 
     @Override
     public List<Charge> getCharges(TimePlanRequest request) {
@@ -33,7 +31,7 @@ public class AdvancedTimePlugin implements TimePlugin {
     private TimePlan getSelectedPlan(TimePlanRequest request) {
         Map<String, List<TimePlan>> timePlansMap = initTimePlansMap(request.getTimePlans());
         List<TimePlan> timePlans=null;
-        if (isHoliday(request.getChargeDate()) ) {
+        if (holidayService.isHoliday(request.getChargeDate()) ) {
             timePlans = timePlansMap.get(HOLIDAY);
         }
         if (timePlans==null) {

@@ -13,6 +13,7 @@ public interface SubscriptionCampaignService {
     void signupToCampaign(CampaignSignupRequest request);
     void activateCampaignsForSubscription(Integer subscriptionId);
     RatingResponse rate(RatingRequest request);
+    RatingResponse estimate(RatingRequest request);
 
 
 }

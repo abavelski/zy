@@ -5,13 +5,14 @@ import com.zy.app.rating.standard.model.RatingRequest;
 import java.time.LocalDateTime;
 
 /**
- * aba
- * 06/04/15
+ * alexei.bavelski@gmail.com
+ * 11/09/15
  */
 public class RatingRequestBuilder {
+    private String sessionKey;
     private String pricePlanCode;
     private String ratingCode;
-    private long amount;
+    private long units;
     private String destination;
     private LocalDateTime chargeDate;
     private int referenceId;
@@ -24,6 +25,11 @@ public class RatingRequestBuilder {
         return new RatingRequestBuilder();
     }
 
+    public RatingRequestBuilder withSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+        return this;
+    }
+
     public RatingRequestBuilder withPricePlanCode(String pricePlanCode) {
         this.pricePlanCode = pricePlanCode;
         return this;
@@ -34,8 +40,8 @@ public class RatingRequestBuilder {
         return this;
     }
 
-    public RatingRequestBuilder withAmount(long amount) {
-        this.amount = amount;
+    public RatingRequestBuilder withUnits(long units) {
+        this.units = units;
         return this;
     }
 
@@ -60,14 +66,15 @@ public class RatingRequestBuilder {
     }
 
     public RatingRequestBuilder but() {
-        return aRatingRequest().withPricePlanCode(pricePlanCode).withRatingCode(ratingCode).withAmount(amount).withDestination(destination).withChargeDate(chargeDate).withReferenceId(referenceId).withSubscriptionId(subscriptionId);
+        return aRatingRequest().withSessionKey(sessionKey).withPricePlanCode(pricePlanCode).withRatingCode(ratingCode).withUnits(units).withDestination(destination).withChargeDate(chargeDate).withReferenceId(referenceId).withSubscriptionId(subscriptionId);
     }
 
     public RatingRequest build() {
         RatingRequest ratingRequest = new RatingRequest();
+        ratingRequest.setSessionKey(sessionKey);
         ratingRequest.setPricePlanCode(pricePlanCode);
         ratingRequest.setRatingCode(ratingCode);
-        ratingRequest.setAmount(amount);
+        ratingRequest.setUnits(units);
         ratingRequest.setDestination(destination);
         ratingRequest.setChargeDate(chargeDate);
         ratingRequest.setReferenceId(referenceId);

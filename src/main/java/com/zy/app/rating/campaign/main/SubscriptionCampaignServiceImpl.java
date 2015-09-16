@@ -60,6 +60,15 @@ public class SubscriptionCampaignServiceImpl implements SubscriptionCampaignServ
 
     @Override
     public RatingResponse rate(RatingRequest request) {
+        return work(request, false);
+    }
+
+    @Override
+    public RatingResponse estimate(RatingRequest request) {
+        return work(request, true);
+    }
+
+    private RatingResponse work(RatingRequest request, boolean estimate) {
         RatingResponse response=null;
         List<String> campaignCodes = ratingService.getCampaignCodes(request);
 
@@ -67,7 +76,12 @@ public class SubscriptionCampaignServiceImpl implements SubscriptionCampaignServ
         for (SubscriptionCampaign campaign : campaigns) {
             if (campaignCodes.contains(campaign.getCampaignCode())) {
                 CampaignPlugin plugin = campaignPlugins.get(campaign.getCampaignPlugin());
-                response = plugin.rate(request, campaign);
+                if (estimate) {
+                    response = plugin.estimate(request, campaign);
+                } else {
+                    response = plugin.rate(request, campaign);
+                }
+                break; //TODO: more than one campaign can apply
             }
         }
         if (response==null) {
@@ -78,4 +92,6 @@ public class SubscriptionCampaignServiceImpl implements SubscriptionCampaignServ
         }
         return response;
     }
+
+
 }

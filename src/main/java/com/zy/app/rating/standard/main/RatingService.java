@@ -1,5 +1,6 @@
 package com.zy.app.rating.standard.main;
 
+import com.zy.app.rating.prepaid.model.PrepaidRatingResponse;
 import com.zy.app.rating.standard.model.RatingRequest;
 import com.zy.app.rating.standard.model.RatingResponse;
 
@@ -11,6 +12,7 @@ import java.util.List;
 public interface RatingService {
 
     RatingResponse rate(RatingRequest request);
+    PrepaidRatingResponse estimate(double maxAmount, RatingRequest request);
     List<String> getCampaignCodes (RatingRequest request);
 
 }

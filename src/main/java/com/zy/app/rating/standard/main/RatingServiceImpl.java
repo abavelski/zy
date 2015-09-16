@@ -1,6 +1,8 @@
 package com.zy.app.rating.standard.main;
 
 import com.zy.app.common.model.ChargeLine;
+import com.zy.app.rating.prepaid.model.PrepaidRatingResponse;
+import com.zy.app.rating.prepaid.model.PrepaidRatingStatus;
 import com.zy.app.rating.standard.dao.PricePlanDao;
 import com.zy.app.rating.standard.main.plugin.location.LocationPlugin;
 import com.zy.app.rating.standard.main.plugin.location.LocationType;
@@ -60,7 +62,7 @@ public class RatingServiceImpl implements RatingService {
                         .withDescription(ratingDescriptionService.getRatingDescription(charge, locationResponse))
                         .withChargeDate(request.getChargeDate())
                         .withSubscriptionId(request.getSubscriptionId())
-                        .withTotal(ratingPlugin.calculatePrice(request, charge.getRate()))
+                        .withTotal(ratingPlugin.calculatePrice(request.getUnits(), charge.getRate()))
                     .build();
             chargeLines.add(line);
         }
@@ -68,6 +70,34 @@ public class RatingServiceImpl implements RatingService {
                 .withChargeLines(chargeLines)
                 .build();
         return response;
+    }
+
+    @Override
+    public PrepaidRatingResponse estimate(double maxAmount, RatingRequest request) {
+
+        PricePlan pricePlan = pricePlanDao.getCampaignPlanByCode(request.getPricePlanCode());
+        TrafficPlan trafficPlan = trafficPlanService.getTrafficPlanByRatingCodeForCampaignRating(pricePlan, request.getRatingCode());
+        LocationPlugin locationPlugin = locationPlugins.get(trafficPlan.getLocationPlugin());
+        LocationResponse locationResponse = locationPlugin.getLocationResponse(request, trafficPlan);
+
+        TimePlugin timePlugin = timePlugins.get(trafficPlan.getTimePlugin());
+        TimePlanRequest timeRequest = aTimePlanRequest()
+                .withChargeDate(request.getChargeDate())
+                .withTimePlans(locationResponse.getTimePlans())
+                .build();
+
+        List<Charge> charges = timePlugin.getCharges(timeRequest);
+        double max = maxAmount;
+        PrepaidRatingResponse prepaidResponse=null;
+        for (Charge charge : charges) {
+            RatingPlugin ratingPlugin = ratingPlugins.get(charge.getRatingPlugin());
+            prepaidResponse = ratingPlugin.estimate(max, request.getUnits(), charge.getRate());
+            if (prepaidResponse.getStatus().equals(PrepaidRatingStatus.INSUFFICIENT_FUNDS)) {
+                return prepaidResponse;
+            }
+            max = prepaidResponse.getRemainingBalance();
+        }
+        return prepaidResponse;
     }
 
     @Override

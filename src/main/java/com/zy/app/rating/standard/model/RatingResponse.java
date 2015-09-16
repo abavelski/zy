@@ -9,6 +9,7 @@ public class RatingResponse {
 
     List<ChargeLine> chargeLines;
     RatingRequest ratingRequest;
+    long grantedUnits;
 
     public List<ChargeLine> getChargeLines() {
         return chargeLines;
@@ -24,5 +25,13 @@ public class RatingResponse {
 
     public void setRatingRequest(RatingRequest ratingRequest) {
         this.ratingRequest = ratingRequest;
+    }
+
+    public long getGrantedUnits() {
+        return grantedUnits;
+    }
+
+    public void setGrantedUnits(long grantedUnits) {
+        this.grantedUnits = grantedUnits;
     }
 }
