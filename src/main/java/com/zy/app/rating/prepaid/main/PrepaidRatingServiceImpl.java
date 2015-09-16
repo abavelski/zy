@@ -36,7 +36,7 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
     @Override
     @Transactional
     public PrepaidRatingResponse startRatingSession(RatingRequest request) {
-        PrepaidRatingResponse ratingResponse= null;
+        PrepaidRatingResponse ratingResponse;
         RatingResponse responseFromCampaigns = subscriptionCampaignService.estimate(request);
         RatingSession ratingSession = aRatingSession()
                 .withSessionKey(request.getSessionKey())
@@ -55,7 +55,9 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
             ratingResponse = ratingService.estimate(balance.getAmount(), responseFromCampaigns.getRatingRequest());
             double price = balance.getAmount() - ratingResponse.getRemainingBalance();
             ratingSession.setPrice(price);
-            ratingSession.setReservedUnits(ratingResponse.getGrantedUnits());
+            long totalGrantedUnits = ratingResponse.getGrantedUnits() + responseFromCampaigns.getGrantedUnits();
+            ratingSession.setReservedUnits(totalGrantedUnits);
+            ratingResponse.setGrantedUnits(totalGrantedUnits);
             ratingSessionDao.createSession(ratingSession);
 
             balance.setReservedAmount(balance.getReservedAmount()+price);

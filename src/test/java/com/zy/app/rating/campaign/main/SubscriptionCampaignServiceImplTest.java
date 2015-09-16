@@ -44,9 +44,16 @@ public class SubscriptionCampaignServiceImplTest {
             .withCampaignPlugin(CampaignType.BUNDLE)
             .build();
 
+    private final RatingRequest ratingRequest = aRatingRequest()
+            .withPricePlanCode("pp1")
+            .withSubscriptionId(1)
+            .build();
+
     @Before
     public void setUp() throws Exception {
         when(campaignPlugins.get(CampaignType.BUNDLE)).thenReturn(bundle);
+        when(ratingService.getCampaignCodes(ratingRequest)).thenReturn(Arrays.asList("c1", "c2"));
+        when(subscriptionCampaignDao.getSubscriptionCampaignsForSubscription(1)).thenReturn(Arrays.asList(sc));
     }
 
     @Test
@@ -65,17 +72,15 @@ public class SubscriptionCampaignServiceImplTest {
 
     @Test
     public void testRate() throws Exception {
+        RatingResponse ratingResponse = service.rate(ratingRequest);
+        verify(bundle).rate(ratingRequest, sc);
+        assertThat(ratingResponse.getRatingRequest(), equalTo(ratingRequest));
+    }
 
-        RatingRequest request = aRatingRequest()
-                .withPricePlanCode("pp1")
-                .withSubscriptionId(1)
-                .build();
-
-        when(ratingService.getCampaignCodes(request)).thenReturn(Arrays.asList("c1", "c2"));
-        when(subscriptionCampaignDao.getSubscriptionCampaignsForSubscription(1)).thenReturn(Arrays.asList(sc));
-
-        RatingResponse ratingResponse = service.rate(request);
-        verify(bundle).rate(request, sc);
-        assertThat(ratingResponse.getRatingRequest(), equalTo(request));
+    @Test
+    public void testEstimate() throws Exception {
+        RatingResponse ratingResponse = service.estimate(ratingRequest);
+        verify(bundle).estimate(ratingRequest, sc);
+        assertThat(ratingResponse.getRatingRequest(), equalTo(ratingRequest));
     }
 }

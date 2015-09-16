@@ -96,4 +96,29 @@ public class PrepaidRatingServiceImplTest {
         verify(ratingSessionDao).createSession(RATING_SESSION.but().withPrice(0.98d).build());
         verify(balanceDao).updateBalance(BALANCE.but().withReservedAmount(0.98d).build());
     }
+
+    @Test
+    public void testStartRatingSessionPartiallyGranted() {
+        RatingRequest ratingRequest = ratingRequest().but().withSessionKey("123").withUnits(135).build();
+        RatingRequest remainingRequest = ratingRequest().but().withSessionKey("123").withUnits(75L).build();
+
+        when(subscriptionCampaignService.estimate(ratingRequest)).thenReturn(aRatingResponse()
+                .withRatingRequest(remainingRequest)
+                .withGrantedUnits(60L)
+                .build());
+
+        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(BALANCE.but().withAmount(5d).build());
+        when(ratingService.estimate(5d, remainingRequest)).thenReturn(aPrepaidRatingResponse()
+                .withStatus(PrepaidRatingStatus.PARTIALLY_GRANTED)
+                .withGrantedUnits(60L)
+                .withRemainingBalance(2d)
+                .build());
+
+        PrepaidRatingResponse response = prepaidRatingService.startRatingSession(ratingRequest);
+        assertThat("granted 120 units", response.getGrantedUnits(), equalTo(120L));
+        assertThat("status is PARTIALLY_GRANTED", response.getStatus(), equalTo(PrepaidRatingStatus.PARTIALLY_GRANTED));
+
+        verify(ratingSessionDao).createSession(RATING_SESSION.but().withPrice(3d).withReservedUnits(120L).build());
+        verify(balanceDao).updateBalance(BALANCE.but().withAmount(5d).withReservedAmount(3d).build());
+    }
 }
