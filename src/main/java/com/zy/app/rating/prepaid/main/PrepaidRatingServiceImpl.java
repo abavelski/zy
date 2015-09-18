@@ -56,12 +56,20 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
             double price = balance.getAmount() - ratingResponse.getRemainingBalance();
             ratingSession.setPrice(price);
             long totalGrantedUnits = ratingResponse.getGrantedUnits() + responseFromCampaigns.getGrantedUnits();
+            if (totalGrantedUnits==0) {
+                ratingResponse.setStatus(PrepaidRatingStatus.INSUFFICIENT_FUNDS);
+            } else if (totalGrantedUnits<request.getUnits()) {
+                ratingResponse.setStatus(PrepaidRatingStatus.PARTIALLY_GRANTED);
+            }
+            if (ratingResponse.getGrantedUnits()>0) {
+                balance.setReservedAmount(balance.getReservedAmount()+price);
+                balanceDao.updateBalance(balance);
+            }
             ratingSession.setReservedUnits(totalGrantedUnits);
             ratingResponse.setGrantedUnits(totalGrantedUnits);
-            ratingSessionDao.createSession(ratingSession);
-
-            balance.setReservedAmount(balance.getReservedAmount()+price);
-            balanceDao.updateBalance(balance);
+            if (ratingSession.getReservedUnits()>0) {
+                ratingSessionDao.createSession(ratingSession);
+            }
         }
 
         return ratingResponse;
