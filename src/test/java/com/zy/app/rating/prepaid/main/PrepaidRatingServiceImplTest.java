@@ -76,7 +76,6 @@ public class PrepaidRatingServiceImplTest {
         assertThat("status is FULLY_GRANTED", response.getStatus(), equalTo(PrepaidRatingStatus.FULLY_GRANTED));
         verify(ratingSessionDao).createSession(RATING_SESSION.build());
     }
-
     @Test
     public void testStartRatingSessionGrantedByStandardRating() {
         RatingRequest ratingRequest = ratingRequest().but().withSessionKey("123").build();
@@ -100,7 +99,6 @@ public class PrepaidRatingServiceImplTest {
         verify(ratingSessionDao).createSession(RATING_SESSION.but().withPrice(0.98d).build());
         verify(balanceDao).updateBalance(BALANCE.but().withReservedAmount(0.98d).build());
     }
-
     @Test
     public void testStartRatingSessionPartiallyGranted() {
         RatingRequest ratingRequest = ratingRequest().but().withSessionKey("123").withUnits(135).build();
@@ -125,7 +123,6 @@ public class PrepaidRatingServiceImplTest {
         verify(ratingSessionDao).createSession(RATING_SESSION.but().withPrice(3d).withReservedUnits(120L).build());
         verify(balanceDao).updateBalance(BALANCE.but().withAmount(5d).withReservedAmount(3d).build());
     }
-
     @Test
     public void testStartRatingSessionPartiallyByCampaignNoMoneyOnTheBalance() {
         RatingRequest ratingRequest = ratingRequest().but().withSessionKey("123").withUnits(135).build();
@@ -150,7 +147,6 @@ public class PrepaidRatingServiceImplTest {
         verify(ratingSessionDao).createSession(RATING_SESSION.but().withReservedUnits(60L).build());
         verify(balanceDao, never()).updateBalance(any(Balance.class));
     }
-
     @Test
     public void testStartSessionInsufficientFunds() {
         RatingRequest ratingRequest = ratingRequest().but().withSessionKey("123").withUnits(135).build();
@@ -172,5 +168,33 @@ public class PrepaidRatingServiceImplTest {
 
         verify(ratingSessionDao, never()).createSession(any(RatingSession.class));
         verify(balanceDao, never()).updateBalance(any(Balance.class));
+    }
+    @Test
+    public void testUpdateRatingSessionFullyGrantedByCampaign() {
+        RatingRequest ratingRequest = ratingRequest().but().withUnits(30).withSessionKey("123").build();
+
+        when(subscriptionCampaignService.estimate(ratingRequest().but().withUnits(91).withSessionKey("123").build()))
+                .thenReturn(aRatingResponse().withGrantedUnits(91L).build());
+
+        when(ratingSessionDao.findSession("123")).thenReturn(RATING_SESSION.build());
+
+        PrepaidRatingResponse response = prepaidRatingService.updateRatingSession(61L, ratingRequest);
+        assertThat("granted 30 units", response.getGrantedUnits(), equalTo(30L));
+        assertThat("status is FULLY_GRANTED", response.getStatus(), equalTo(PrepaidRatingStatus.FULLY_GRANTED));
+        verify(ratingSessionDao).updateSession(RATING_SESSION.but().withUsedUnits(61L).withReservedUnits(30L).build());
+    }
+    @Test
+    public void testUpdateRatingSessionPartlyUsedFullyGrantedByCampaign() {
+        RatingRequest ratingRequest = ratingRequest().but().withUnits(35).withSessionKey("123").build();
+
+        when(ratingSessionDao.findSession("123")).thenReturn(RATING_SESSION.build());
+
+        when(subscriptionCampaignService.estimate(ratingRequest().but().withUnits(96).withSessionKey("123").build()))
+                .thenReturn(aRatingResponse().withGrantedUnits(91L).build());
+
+        PrepaidRatingResponse response = prepaidRatingService.updateRatingSession(45L, ratingRequest);
+        assertThat("granted 30 units", response.getGrantedUnits(), equalTo(35L));
+        assertThat("status is FULLY_GRANTED", response.getStatus(), equalTo(PrepaidRatingStatus.FULLY_GRANTED));
+        verify(ratingSessionDao).updateSession(RATING_SESSION.but().withUsedUnits(45L).withReservedUnits(51L).build());
     }
 }

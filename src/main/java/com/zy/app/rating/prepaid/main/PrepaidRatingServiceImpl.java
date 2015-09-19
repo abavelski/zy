@@ -76,8 +76,32 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
     }
 
     @Override
-    public PrepaidRatingResponse updateRatingSession(RatingRequest request) {
-        return null;
+    public PrepaidRatingResponse updateRatingSession(long usedUnits, RatingRequest request) {
+        PrepaidRatingResponse ratingResponse=null;
+        long neededUnits = request.getUnits();
+        RatingSession session = ratingSessionDao.findSession(request.getSessionKey());
+        session.setUsedUnits(session.getUsedUnits()+usedUnits);
+        long remainingReservedUnits = session.getReservedUnits() - usedUnits;
+        session.setReservedUnits((remainingReservedUnits >0)?remainingReservedUnits:0);
+
+        long requestedUnits = neededUnits + session.getReservedUnits() + session.getUsedUnits();
+        request.setUnits(requestedUnits);
+        RatingResponse responseFromCampaigns = subscriptionCampaignService.estimate(request);
+
+        if (responseFromCampaigns.getRatingRequest()==null) {
+            ratingResponse = aPrepaidRatingResponse()
+                    .withStatus(PrepaidRatingStatus.FULLY_GRANTED)
+                    .withGrantedUnits(neededUnits)
+                    .build();
+            session.setReservedUnits(session.getReservedUnits()+neededUnits);
+        }
+
+
+        ratingSessionDao.updateSession(session);
+
+
+
+        return ratingResponse;
     }
 
     @Override

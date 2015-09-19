@@ -9,5 +9,7 @@ import com.zy.app.rating.prepaid.model.RatingSession;
 public interface RatingSessionDao {
 
     void createSession(RatingSession ratingSession);
+    RatingSession findSession(String sessionKey);
+    void updateSession(RatingSession session);
 
 }

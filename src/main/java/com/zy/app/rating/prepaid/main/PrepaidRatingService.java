@@ -10,7 +10,7 @@ import com.zy.app.rating.standard.model.RatingRequest;
 public interface PrepaidRatingService {
 
     PrepaidRatingResponse startRatingSession(RatingRequest request);
-    PrepaidRatingResponse updateRatingSession(RatingRequest request);
+    PrepaidRatingResponse updateRatingSession(long usedUnits, RatingRequest request);
     PrepaidRatingResponse finishRatingSession(RatingRequest request);
 
 }
