@@ -77,7 +77,7 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
 
     @Override
     public PrepaidRatingResponse updateRatingSession(long usedUnits, RatingRequest request) {
-        PrepaidRatingResponse ratingResponse=null;
+        PrepaidRatingResponse ratingResponse;
         long neededUnits = request.getUnits();
         RatingSession session = ratingSessionDao.findSession(request.getSessionKey());
         session.setUsedUnits(session.getUsedUnits()+usedUnits);
@@ -94,6 +94,24 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
                     .withGrantedUnits(neededUnits)
                     .build();
             session.setReservedUnits(session.getReservedUnits()+neededUnits);
+        } else {
+            Balance balance = balanceDao.findBalanceBySubscriptionId(request.getSubscriptionId());
+            ratingResponse = ratingService.estimate(balance.getAmount(), responseFromCampaigns.getRatingRequest());
+            double price = balance.getAmount() - ratingResponse.getRemainingBalance();
+            session.setPrice(price);
+            long totalGrantedUnits = ratingResponse.getGrantedUnits() + responseFromCampaigns.getGrantedUnits();
+            if (totalGrantedUnits==0) {
+                ratingResponse.setStatus(PrepaidRatingStatus.INSUFFICIENT_FUNDS);
+            } else if (totalGrantedUnits<request.getUnits()) {
+                ratingResponse.setStatus(PrepaidRatingStatus.PARTIALLY_GRANTED);
+            }
+            if (ratingResponse.getGrantedUnits()>0) {
+                balance.setReservedAmount(balance.getReservedAmount()+price);
+                balanceDao.updateBalance(balance);
+            }
+            session.setReservedUnits(totalGrantedUnits-session.getUsedUnits());
+            ratingResponse.setGrantedUnits(neededUnits);
+
         }
 
 
