@@ -11,6 +11,6 @@ public interface PrepaidRatingService {
 
     PrepaidRatingResponse startRatingSession(RatingRequest request);
     PrepaidRatingResponse updateRatingSession(long usedUnits, RatingRequest request);
-    PrepaidRatingResponse finishRatingSession(RatingRequest request);
+    PrepaidRatingResponse terminateRatingSession(RatingRequest request);
 
 }

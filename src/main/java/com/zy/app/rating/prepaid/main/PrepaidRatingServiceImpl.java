@@ -33,97 +33,108 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
     @Autowired
     RatingSessionDao ratingSessionDao;
 
+    private RatingSession createRatingSession(RatingRequest request) {
+        return aRatingSession()
+                .withSessionKey(request.getSessionKey())
+                .withChargeDate(request.getChargeDate())
+                .build();
+    }
+
+    private PrepaidRatingResponse fullyGrantedFromCampaign(long units) {
+      return aPrepaidRatingResponse()
+              .withStatus(PrepaidRatingStatus.FULLY_GRANTED)
+              .withGrantedUnits(units)
+              .build();
+    }
+
     @Override
     @Transactional
     public PrepaidRatingResponse startRatingSession(RatingRequest request) {
         PrepaidRatingResponse ratingResponse;
+
+        RatingSession ratingSession = createRatingSession(request);
         RatingResponse responseFromCampaigns = subscriptionCampaignService.estimate(request);
-        RatingSession ratingSession = aRatingSession()
-                .withSessionKey(request.getSessionKey())
-                .withChargeDate(request.getChargeDate())
-                .withReservedUnits(responseFromCampaigns.getGrantedUnits())
-                .build();
+
+        long grantedUnitsFromCampaign = responseFromCampaigns.getGrantedUnits();
 
         if (responseFromCampaigns.getRatingRequest()==null) {
+            ratingSession.setReservedUnits(grantedUnitsFromCampaign);
             ratingSessionDao.createSession(ratingSession);
-            ratingResponse =  aPrepaidRatingResponse()
-                    .withStatus(PrepaidRatingStatus.FULLY_GRANTED)
-                    .withGrantedUnits(responseFromCampaigns.getGrantedUnits())
-                    .build();
+            ratingResponse = fullyGrantedFromCampaign(grantedUnitsFromCampaign);
         } else {
             Balance balance = balanceDao.findBalanceBySubscriptionId(request.getSubscriptionId());
             ratingResponse = ratingService.estimate(balance.getAmount(), responseFromCampaigns.getRatingRequest());
-            double price = balance.getAmount() - ratingResponse.getRemainingBalance();
-            ratingSession.setPrice(price);
-            long totalGrantedUnits = ratingResponse.getGrantedUnits() + responseFromCampaigns.getGrantedUnits();
+            double totalSessionPrice = balance.getAmount() - ratingResponse.getRemainingBalance();
+            long grantedUnitsFromStandardRating = ratingResponse.getGrantedUnits();
+            long totalGrantedUnits = grantedUnitsFromStandardRating + grantedUnitsFromCampaign;
+
             if (totalGrantedUnits==0) {
                 ratingResponse.setStatus(PrepaidRatingStatus.INSUFFICIENT_FUNDS);
             } else if (totalGrantedUnits<request.getUnits()) {
                 ratingResponse.setStatus(PrepaidRatingStatus.PARTIALLY_GRANTED);
             }
-            if (ratingResponse.getGrantedUnits()>0) {
-                balance.setReservedAmount(balance.getReservedAmount()+price);
+            if (grantedUnitsFromStandardRating >0) {
+                balance.setReservedAmount(balance.getReservedAmount()+totalSessionPrice);
                 balanceDao.updateBalance(balance);
             }
-            ratingSession.setReservedUnits(totalGrantedUnits);
+
             ratingResponse.setGrantedUnits(totalGrantedUnits);
+            ratingSession.setPrice(totalSessionPrice);
+            ratingSession.setReservedUnits(totalGrantedUnits);
             if (ratingSession.getReservedUnits()>0) {
                 ratingSessionDao.createSession(ratingSession);
             }
         }
-
         return ratingResponse;
     }
 
     @Override
     public PrepaidRatingResponse updateRatingSession(long usedUnits, RatingRequest request) {
         PrepaidRatingResponse ratingResponse;
-        long neededUnits = request.getUnits();
+
+        long requestedUnits = request.getUnits();
+
         RatingSession session = ratingSessionDao.findSession(request.getSessionKey());
+        long oldTotalUnits = session.getUsedUnits()+session.getReservedUnits();
+        double oldSessionPrice = session.getPrice();
+
         session.setUsedUnits(session.getUsedUnits()+usedUnits);
         long remainingReservedUnits = session.getReservedUnits() - usedUnits;
         session.setReservedUnits((remainingReservedUnits >0)?remainingReservedUnits:0);
 
-        long requestedUnits = neededUnits + session.getReservedUnits() + session.getUsedUnits();
-        request.setUnits(requestedUnits);
+        long totalRequestedUnits = requestedUnits + session.getReservedUnits() + session.getUsedUnits();
+        request.setUnits(totalRequestedUnits);
+
         RatingResponse responseFromCampaigns = subscriptionCampaignService.estimate(request);
 
         if (responseFromCampaigns.getRatingRequest()==null) {
-            ratingResponse = aPrepaidRatingResponse()
-                    .withStatus(PrepaidRatingStatus.FULLY_GRANTED)
-                    .withGrantedUnits(neededUnits)
-                    .build();
-            session.setReservedUnits(session.getReservedUnits()+neededUnits);
+            ratingResponse = fullyGrantedFromCampaign(requestedUnits);
+            session.setReservedUnits(session.getReservedUnits()+requestedUnits);
         } else {
             Balance balance = balanceDao.findBalanceBySubscriptionId(request.getSubscriptionId());
             ratingResponse = ratingService.estimate(balance.getAmount(), responseFromCampaigns.getRatingRequest());
-            double price = balance.getAmount() - ratingResponse.getRemainingBalance();
-            session.setPrice(price);
+            double newPrice = balance.getAmount() - ratingResponse.getRemainingBalance();
+            session.setPrice(newPrice);
             long totalGrantedUnits = ratingResponse.getGrantedUnits() + responseFromCampaigns.getGrantedUnits();
-            if (totalGrantedUnits==0) {
+
+            if (totalGrantedUnits-oldTotalUnits==0) {
                 ratingResponse.setStatus(PrepaidRatingStatus.INSUFFICIENT_FUNDS);
             } else if (totalGrantedUnits<request.getUnits()) {
                 ratingResponse.setStatus(PrepaidRatingStatus.PARTIALLY_GRANTED);
             }
-            if (ratingResponse.getGrantedUnits()>0) {
-                balance.setReservedAmount(balance.getReservedAmount()+price);
+            if (ratingResponse.getGrantedUnits()-oldTotalUnits>0) {
+                balance.setReservedAmount(balance.getReservedAmount()-oldSessionPrice+newPrice);
                 balanceDao.updateBalance(balance);
             }
             session.setReservedUnits(totalGrantedUnits-session.getUsedUnits());
-            ratingResponse.setGrantedUnits(neededUnits);
-
+            ratingResponse.setGrantedUnits(totalGrantedUnits-oldTotalUnits);
         }
-
-
         ratingSessionDao.updateSession(session);
-
-
-
         return ratingResponse;
     }
 
     @Override
-    public PrepaidRatingResponse finishRatingSession(RatingRequest request) {
+    public PrepaidRatingResponse terminateRatingSession(RatingRequest request) {
         return null;
     }
 }

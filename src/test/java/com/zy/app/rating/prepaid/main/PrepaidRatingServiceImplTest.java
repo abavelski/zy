@@ -180,24 +180,86 @@ public class PrepaidRatingServiceImplTest {
         RatingRequest ratingRequest = ratingRequest().but().withUnits(96).build();
 
         when(ratingSessionDao.findSession("123")).thenReturn(ratingSession().withPrice(0.98).build());
+        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance().withReservedAmount(0.98d).build());
         when(subscriptionCampaignService.estimate(ratingRequest)).thenReturn(aRatingResponse()
                 .withRatingRequest(ratingRequest)
                 .withGrantedUnits(0L)
                 .build());
 
-        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance().build());
         when(ratingService.estimate(100d, ratingRequest)).thenReturn(aPrepaidRatingResponse()
                 .withStatus(PrepaidRatingStatus.FULLY_GRANTED)
                 .withGrantedUnits(96)
                 .withRemainingBalance(99.02d)
                 .build());
 
-        PrepaidRatingResponse response = prepaidRatingService.updateRatingSession(61, ratingRequest().but().withUnits(35).build());
+        PrepaidRatingResponse response = prepaidRatingService.updateRatingSession(61L, ratingRequest().but().withUnits(35L).build());
         assertThat("granted 35 units", response.getGrantedUnits(), equalTo(35L));
         assertThat("status is FULLY_GRANTED", response.getStatus(), equalTo(PrepaidRatingStatus.FULLY_GRANTED));
 
         verify(ratingService).estimate(100d, ratingRequest);
-        verify(ratingSessionDao).updateSession(ratingSession().but().withUsedUnits(61).withReservedUnits(35).withPrice(0.98).build());
+        verify(ratingSessionDao).updateSession(ratingSession().but().withUsedUnits(61L).withReservedUnits(35L).withPrice(0.98).build());
         verify(balanceDao).updateBalance(balance().but().withReservedAmount(0.98).build());
+    }
+    @Test
+    public void testUpdateRatingSessionGrantedByStandardRatingPartlyUsed() {
+        when(ratingSessionDao.findSession("123")).thenReturn(ratingSession().build());
+
+        RatingRequest updatedRequest = ratingRequest().but().withUnits(96).build();
+        when(subscriptionCampaignService.estimate(updatedRequest))
+                .thenReturn(aRatingResponse().withRatingRequest(updatedRequest).build());
+
+        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance().but().withReservedAmount(0.98).build());
+        when(ratingService.estimate(100d, updatedRequest)).thenReturn(aPrepaidRatingResponse()
+                .withStatus(PrepaidRatingStatus.FULLY_GRANTED)
+                .withGrantedUnits(96)
+                .withRemainingBalance(99.02d)
+                .build());
+        PrepaidRatingResponse response = prepaidRatingService.updateRatingSession(45L, ratingRequest().but().withUnits(35).build());
+        assertThat("granted 35 units", response.getGrantedUnits(), equalTo(35L));
+        assertThat("status is FULLY_GRANTED", response.getStatus(), equalTo(PrepaidRatingStatus.FULLY_GRANTED));
+        verify(ratingSessionDao).updateSession(ratingSession().but().withUsedUnits(45L).withReservedUnits(51L).withPrice(0.98d).build());
+        verify(subscriptionCampaignService).estimate(updatedRequest);
+    }
+    @Test
+    public void testUpdateRatingSessionPartlyGranted() {
+        when(ratingSessionDao.findSession("123")).thenReturn(ratingSession().but().withPrice(0.98d).build());
+
+        RatingRequest updatedRequest = ratingRequest().but().withUnits(196).build();
+        when(subscriptionCampaignService.estimate(updatedRequest))
+                .thenReturn(aRatingResponse().withRatingRequest(updatedRequest).build());
+
+        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance().but().withAmount(1.5d).withReservedAmount(0.98d).build());
+        when(ratingService.estimate(1.5d, updatedRequest)).thenReturn(aPrepaidRatingResponse()
+                .withStatus(PrepaidRatingStatus.PARTIALLY_GRANTED)
+                .withGrantedUnits(180)
+                .withRemainingBalance(0.03d)
+                .build());
+        PrepaidRatingResponse response = prepaidRatingService.updateRatingSession(45L, ratingRequest().but().withUnits(135).build());
+        assertThat("granted 119 units", response.getGrantedUnits(), equalTo(119L));
+        assertThat("status is PARTIALLY_GRANTED", response.getStatus(), equalTo(PrepaidRatingStatus.PARTIALLY_GRANTED));
+        verify(ratingSessionDao).updateSession(ratingSession().but().withUsedUnits(45L).withReservedUnits(135L).withPrice(1.47d).build());
+        verify(subscriptionCampaignService).estimate(updatedRequest);
+        verify(balanceDao).updateBalance(balance().but().withAmount(1.5d).withReservedAmount(1.47d).build());
+    }
+    @Test
+    public void testUpdateRatingSessionInsufficientFunds() {
+        when(ratingSessionDao.findSession("123")).thenReturn(ratingSession().but().withReservedUnits(120L).build());
+
+        RatingRequest updatedRequest = ratingRequest().but().withUnits(180).build();
+        when(subscriptionCampaignService.estimate(updatedRequest))
+                .thenReturn(aRatingResponse().withRatingRequest(updatedRequest).build());
+
+        Balance balance = balance().but().withAmount(1.2d).withReservedAmount(0.98d).build();
+        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance);
+        when(ratingService.estimate(1.2d, updatedRequest)).thenReturn(aPrepaidRatingResponse()
+                .withStatus(PrepaidRatingStatus.PARTIALLY_GRANTED)
+                .withGrantedUnits(120)
+                .withRemainingBalance(0.22d)
+                .build());
+        PrepaidRatingResponse response = prepaidRatingService.updateRatingSession(120L, ratingRequest().but().withUnits(60).build());
+        assertThat("granted 0 units", response.getGrantedUnits(), equalTo(0L));
+        assertThat("status is INSUFFICIENT_FUNDS", response.getStatus(), equalTo(PrepaidRatingStatus.INSUFFICIENT_FUNDS));
+        verify(ratingSessionDao).updateSession(ratingSession().but().withUsedUnits(120L).withReservedUnits(0L).withPrice(0.98d).build());
+        verify(subscriptionCampaignService).estimate(updatedRequest);
     }
 }
