@@ -11,5 +11,6 @@ public interface RatingSessionDao {
     void createSession(RatingSession ratingSession);
     RatingSession findSession(String sessionKey);
     void updateSession(RatingSession session);
+    void deleteSession(String sessionKey);
 
 }

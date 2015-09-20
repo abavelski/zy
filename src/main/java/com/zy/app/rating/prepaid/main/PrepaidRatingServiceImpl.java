@@ -1,5 +1,6 @@
 package com.zy.app.rating.prepaid.main;
 
+import com.zy.app.common.model.ChargeLine;
 import com.zy.app.rating.campaign.main.SubscriptionCampaignService;
 import com.zy.app.rating.prepaid.dao.BalanceDao;
 import com.zy.app.rating.prepaid.dao.RatingSessionDao;
@@ -89,6 +90,7 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
     }
 
     @Override
+    @Transactional
     public PrepaidRatingResponse updateRatingSession(long usedUnits, RatingRequest request) {
         PrepaidRatingResponse ratingResponse;
 
@@ -134,7 +136,34 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
     }
 
     @Override
-    public PrepaidRatingResponse terminateRatingSession(RatingRequest request) {
-        return null;
+    @Transactional
+    public RatingResponse terminateRatingSession(RatingRequest request) {
+        RatingSession session = ratingSessionDao.findSession(request.getSessionKey());
+
+        long totalUnits = session.getUsedUnits()+request.getUnits();
+        request.setUnits(totalUnits);
+
+        RatingResponse response;
+        RatingResponse campaignResponse = subscriptionCampaignService.rate(request);
+        if (campaignResponse.getRatingRequest()==null) {
+            response = campaignResponse;
+        } else {
+            response = ratingService.rate(request);
+            response.getChargeLines().addAll(campaignResponse.getChargeLines());
+        }
+
+        double total = 0;
+        for (ChargeLine chargeLine : response.getChargeLines()) {
+            total+=chargeLine.getTotal();
+        }
+        //update balance
+        Balance balance = balanceDao.findBalanceBySubscriptionId(request.getSubscriptionId());
+        balance.setReservedAmount(balance.getReservedAmount()-session.getPrice());
+        balance.setAmount(balance.getAmount()-total);
+        balanceDao.updateBalance(balance);
+
+        //delete session
+        ratingSessionDao.deleteSession(session.getSessionKey());
+        return response;
     }
 }
