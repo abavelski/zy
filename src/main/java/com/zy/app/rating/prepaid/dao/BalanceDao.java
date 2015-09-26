@@ -8,6 +8,8 @@ import com.zy.app.rating.prepaid.model.Balance;
  */
 public interface BalanceDao {
 
+
+    int createBalance(Balance balance);
     Balance findBalanceBySubscriptionId(int subscriptionId);
     void updateBalance(Balance balance);
 

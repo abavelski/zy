@@ -28,6 +28,9 @@ drop table bundle;
 drop table subscription_campaign;
 drop type campaign_type;
 
+drop table rating_session;
+drop table balance;
+
 --create schema
 create type invoice_status as enum ('OPEN', 'CLOSED');
 
@@ -132,4 +135,19 @@ create table subscription_campaign(
   subscription_id integer,
   campaign_plugin campaign_type,
   campaign_code text
-)
+);
+
+create table rating_session(
+  session_key text primary key,
+  charge_date timestamp,
+  used_units bigint,
+  reserved_units bigint,
+  price numeric(8,2)
+);
+
+create table balance(
+  id serial primary key,
+  subscription_id integer,
+  amount numeric(8,2),
+  reserved_amount numeric(8,2)
+);
