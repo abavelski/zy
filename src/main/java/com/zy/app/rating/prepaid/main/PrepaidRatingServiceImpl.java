@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.zy.app.common.util.MathUtil.round;
 import static com.zy.app.rating.prepaid.model.builder.PrepaidRatingResponseBuilder.aPrepaidRatingResponse;
 import static com.zy.app.rating.prepaid.model.builder.RatingSessionBuilder.aRatingSession;
 
@@ -26,7 +27,7 @@ import static com.zy.app.rating.prepaid.model.builder.RatingSessionBuilder.aRati
 public class PrepaidRatingServiceImpl implements PrepaidRatingService {
 
     @Autowired
-    BalanceDao balanceDao;
+    BalanceService balanceService;
     @Autowired
     SubscriptionCampaignService subscriptionCampaignService;
     @Autowired
@@ -63,9 +64,9 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
             ratingSessionDao.createSession(ratingSession);
             ratingResponse = fullyGrantedFromCampaign(grantedUnitsFromCampaign);
         } else {
-            Balance balance = balanceDao.findBalanceBySubscriptionId(request.getSubscriptionId());
-            ratingResponse = ratingService.estimate(balance.getAmount(), responseFromCampaigns.getRatingRequest());
-            double totalSessionPrice = balance.getAmount() - ratingResponse.getRemainingBalance();
+            double balanceAmount = balanceService.getRemainingBalanceExclVat(request.getSubscriptionId());
+            ratingResponse = ratingService.estimate(balanceAmount, responseFromCampaigns.getRatingRequest());
+            double totalSessionPrice = round(balanceAmount - ratingResponse.getRemainingBalance(), 2);
             long grantedUnitsFromStandardRating = ratingResponse.getGrantedUnits();
             long totalGrantedUnits = grantedUnitsFromStandardRating + grantedUnitsFromCampaign;
 
@@ -75,8 +76,7 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
                 ratingResponse.setStatus(PrepaidRatingStatus.PARTIALLY_GRANTED);
             }
             if (grantedUnitsFromStandardRating >0) {
-                balance.setReservedAmount(balance.getReservedAmount()+totalSessionPrice);
-                balanceDao.updateBalance(balance);
+                balanceService.reserveAmountExclVat(request.getSubscriptionId(), 0, totalSessionPrice);
             }
 
             ratingResponse.setGrantedUnits(totalGrantedUnits);
@@ -113,9 +113,9 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
             ratingResponse = fullyGrantedFromCampaign(requestedUnits);
             session.setReservedUnits(session.getReservedUnits()+requestedUnits);
         } else {
-            Balance balance = balanceDao.findBalanceBySubscriptionId(request.getSubscriptionId());
-            ratingResponse = ratingService.estimate(balance.getAmount(), responseFromCampaigns.getRatingRequest());
-            double newPrice = balance.getAmount() - ratingResponse.getRemainingBalance();
+            double balanceAmount = balanceService.getRemainingBalanceExclVat(request.getSubscriptionId());
+            ratingResponse = ratingService.estimate(balanceAmount, responseFromCampaigns.getRatingRequest());
+            double newPrice = round(balanceAmount - ratingResponse.getRemainingBalance(), 2);
             session.setPrice(newPrice);
             long totalGrantedUnits = ratingResponse.getGrantedUnits() + responseFromCampaigns.getGrantedUnits();
 
@@ -125,8 +125,7 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
                 ratingResponse.setStatus(PrepaidRatingStatus.PARTIALLY_GRANTED);
             }
             if (ratingResponse.getGrantedUnits()-oldTotalUnits>0) {
-                balance.setReservedAmount(balance.getReservedAmount()-oldSessionPrice+newPrice);
-                balanceDao.updateBalance(balance);
+                balanceService.reserveAmountExclVat(request.getSubscriptionId(), oldSessionPrice, newPrice);
             }
             session.setReservedUnits(totalGrantedUnits-session.getUsedUnits());
             ratingResponse.setGrantedUnits(totalGrantedUnits-oldTotalUnits);
@@ -157,10 +156,7 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
             total+=chargeLine.getTotal();
         }
         //update balance
-        Balance balance = balanceDao.findBalanceBySubscriptionId(request.getSubscriptionId());
-        balance.setReservedAmount(balance.getReservedAmount()-session.getPrice());
-        balance.setAmount(balance.getAmount()-total);
-        balanceDao.updateBalance(balance);
+        balanceService.chargeExclVat(request.getSubscriptionId(), session.getPrice(), total);
 
         //delete session
         ratingSessionDao.deleteSession(session.getSessionKey());

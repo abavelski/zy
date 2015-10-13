@@ -1,9 +1,7 @@
 package com.zy.app.rating.prepaid.main;
 
 import com.zy.app.rating.campaign.main.SubscriptionCampaignService;
-import com.zy.app.rating.prepaid.dao.BalanceDao;
 import com.zy.app.rating.prepaid.dao.RatingSessionDao;
-import com.zy.app.rating.prepaid.model.Balance;
 import com.zy.app.rating.prepaid.model.PrepaidRatingResponse;
 import com.zy.app.rating.prepaid.model.PrepaidRatingStatus;
 import com.zy.app.rating.prepaid.model.RatingSession;
@@ -15,7 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.zy.app.rating.RatingTestData.*;
+import static com.zy.app.rating.RatingTestData.ratingRequest;
+import static com.zy.app.rating.RatingTestData.ratingSession;
 import static com.zy.app.rating.prepaid.model.builder.PrepaidRatingResponseBuilder.aPrepaidRatingResponse;
 import static com.zy.app.rating.standard.model.buillder.RatingResponseBuilder.aRatingResponse;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -38,7 +37,7 @@ public class PrepaidRatingServiceImplTest {
     @Mock
     RatingSessionDao ratingSessionDao;
     @Mock
-    BalanceDao balanceDao;
+    BalanceService balanceService;
     @Mock
     RatingService ratingService;
 
@@ -65,7 +64,7 @@ public class PrepaidRatingServiceImplTest {
                 .withGrantedUnits(0L)
                 .build());
 
-        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance().build());
+        when(balanceService.getRemainingBalanceExclVat(1)).thenReturn(100d);
         when(ratingService.estimate(100d, ratingRequest)).thenReturn(aPrepaidRatingResponse()
                 .withStatus(PrepaidRatingStatus.FULLY_GRANTED)
                 .withGrantedUnits(61)
@@ -77,7 +76,7 @@ public class PrepaidRatingServiceImplTest {
         assertThat("status is FULLY_GRANTED", response.getStatus(), equalTo(PrepaidRatingStatus.FULLY_GRANTED));
 
         verify(ratingSessionDao).createSession(ratingSession().but().withPrice(0.98d).build());
-        verify(balanceDao).updateBalance(balance().but().withReservedAmount(0.98d).build());
+        verify(balanceService).reserveAmountExclVat(1, 0, 0.98d);
     }
     @Test
     public void testStartRatingSessionPartiallyGranted() {
@@ -89,7 +88,7 @@ public class PrepaidRatingServiceImplTest {
                 .withGrantedUnits(60L)
                 .build());
 
-        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance().but().withAmount(5d).build());
+        when(balanceService.getRemainingBalanceExclVat(1)).thenReturn(5d);
         when(ratingService.estimate(5d, remainingRequest)).thenReturn(aPrepaidRatingResponse()
                 .withStatus(PrepaidRatingStatus.PARTIALLY_GRANTED)
                 .withGrantedUnits(60L)
@@ -101,7 +100,7 @@ public class PrepaidRatingServiceImplTest {
         assertThat("status is PARTIALLY_GRANTED", response.getStatus(), equalTo(PrepaidRatingStatus.PARTIALLY_GRANTED));
 
         verify(ratingSessionDao).createSession(ratingSession().but().withPrice(3d).withReservedUnits(120L).build());
-        verify(balanceDao).updateBalance(balance().but().withAmount(5d).withReservedAmount(3d).build());
+        verify(balanceService).reserveAmountExclVat(1, 0, 3d);
     }
     @Test
     public void testStartRatingSessionPartiallyByCampaignNoMoneyOnTheBalance() {
@@ -113,7 +112,7 @@ public class PrepaidRatingServiceImplTest {
                 .withGrantedUnits(60L)
                 .build());
 
-        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance().but().withAmount(2d).build());
+        when(balanceService.getRemainingBalanceExclVat(1)).thenReturn(2d);
         when(ratingService.estimate(2d, remainingRequest)).thenReturn(aPrepaidRatingResponse()
                 .withStatus(PrepaidRatingStatus.INSUFFICIENT_FUNDS)
                 .withGrantedUnits(0L)
@@ -125,7 +124,7 @@ public class PrepaidRatingServiceImplTest {
         assertThat("status is PARTIALLY_GRANTED", response.getStatus(), equalTo(PrepaidRatingStatus.PARTIALLY_GRANTED));
 
         verify(ratingSessionDao).createSession(ratingSession().but().withReservedUnits(60L).build());
-        verify(balanceDao, never()).updateBalance(any(Balance.class));
+        verify(balanceService, never()).reserveAmountExclVat(anyInt(), anyDouble(), anyDouble());
     }
     @Test
     public void testStartSessionInsufficientFunds() {
@@ -135,7 +134,7 @@ public class PrepaidRatingServiceImplTest {
                 .withRatingRequest(ratingRequest)
                 .build());
 
-        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance().but().withAmount(2d).build());
+        when(balanceService.getRemainingBalanceExclVat(1)).thenReturn(2d);
         when(ratingService.estimate(2d, ratingRequest)).thenReturn(aPrepaidRatingResponse()
                 .withStatus(PrepaidRatingStatus.INSUFFICIENT_FUNDS)
                 .withGrantedUnits(0L)
@@ -147,7 +146,7 @@ public class PrepaidRatingServiceImplTest {
         assertThat("status is INSUFFICIENT_FUNDS", response.getStatus(), equalTo(PrepaidRatingStatus.INSUFFICIENT_FUNDS));
 
         verify(ratingSessionDao, never()).createSession(any(RatingSession.class));
-        verify(balanceDao, never()).updateBalance(any(Balance.class));
+        verify(balanceService, never()).reserveAmountExclVat(anyInt(), anyDouble(), anyDouble());
     }
     @Test
     public void testUpdateRatingSessionFullyGrantedByCampaign() {
@@ -180,7 +179,7 @@ public class PrepaidRatingServiceImplTest {
         RatingRequest ratingRequest = ratingRequest().but().withUnits(96).build();
 
         when(ratingSessionDao.findSession("123")).thenReturn(ratingSession().withPrice(0.98).build());
-        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance().withReservedAmount(0.98d).build());
+        when(balanceService.getRemainingBalanceExclVat(1)).thenReturn(100d);
         when(subscriptionCampaignService.estimate(ratingRequest)).thenReturn(aRatingResponse()
                 .withRatingRequest(ratingRequest)
                 .withGrantedUnits(0L)
@@ -198,7 +197,7 @@ public class PrepaidRatingServiceImplTest {
 
         verify(ratingService).estimate(100d, ratingRequest);
         verify(ratingSessionDao).updateSession(ratingSession().but().withUsedUnits(61L).withReservedUnits(35L).withPrice(0.98).build());
-        verify(balanceDao).updateBalance(balance().but().withReservedAmount(0.98).build());
+        verify(balanceService).reserveAmountExclVat(1, 0.98d, 0.98d);
     }
     @Test
     public void testUpdateRatingSessionGrantedByStandardRatingPartlyUsed() {
@@ -208,7 +207,7 @@ public class PrepaidRatingServiceImplTest {
         when(subscriptionCampaignService.estimate(updatedRequest))
                 .thenReturn(aRatingResponse().withRatingRequest(updatedRequest).build());
 
-        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance().but().withReservedAmount(0.98).build());
+        when(balanceService.getRemainingBalanceExclVat(1)).thenReturn(100d);
         when(ratingService.estimate(100d, updatedRequest)).thenReturn(aPrepaidRatingResponse()
                 .withStatus(PrepaidRatingStatus.FULLY_GRANTED)
                 .withGrantedUnits(96)
@@ -228,7 +227,7 @@ public class PrepaidRatingServiceImplTest {
         when(subscriptionCampaignService.estimate(updatedRequest))
                 .thenReturn(aRatingResponse().withRatingRequest(updatedRequest).build());
 
-        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance().but().withAmount(1.5d).withReservedAmount(0.98d).build());
+        when(balanceService.getRemainingBalanceExclVat(1)).thenReturn(1.5d);
         when(ratingService.estimate(1.5d, updatedRequest)).thenReturn(aPrepaidRatingResponse()
                 .withStatus(PrepaidRatingStatus.PARTIALLY_GRANTED)
                 .withGrantedUnits(180)
@@ -239,7 +238,7 @@ public class PrepaidRatingServiceImplTest {
         assertThat("status is PARTIALLY_GRANTED", response.getStatus(), equalTo(PrepaidRatingStatus.PARTIALLY_GRANTED));
         verify(ratingSessionDao).updateSession(ratingSession().but().withUsedUnits(45L).withReservedUnits(135L).withPrice(1.47d).build());
         verify(subscriptionCampaignService).estimate(updatedRequest);
-        verify(balanceDao).updateBalance(balance().but().withAmount(1.5d).withReservedAmount(1.47d).build());
+        verify(balanceService).reserveAmountExclVat(1, 0.98d, 1.47d);
     }
     @Test
     public void testUpdateRatingSessionInsufficientFunds() {
@@ -249,8 +248,8 @@ public class PrepaidRatingServiceImplTest {
         when(subscriptionCampaignService.estimate(updatedRequest))
                 .thenReturn(aRatingResponse().withRatingRequest(updatedRequest).build());
 
-        Balance balance = balance().but().withAmount(1.2d).withReservedAmount(0.98d).build();
-        when(balanceDao.findBalanceBySubscriptionId(1)).thenReturn(balance);
+        when(balanceService.getRemainingBalanceExclVat(1)).thenReturn(1.2d);
+
         when(ratingService.estimate(1.2d, updatedRequest)).thenReturn(aPrepaidRatingResponse()
                 .withStatus(PrepaidRatingStatus.PARTIALLY_GRANTED)
                 .withGrantedUnits(120)
