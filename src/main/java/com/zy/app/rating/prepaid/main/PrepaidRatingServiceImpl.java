@@ -2,9 +2,7 @@ package com.zy.app.rating.prepaid.main;
 
 import com.zy.app.common.model.ChargeLine;
 import com.zy.app.rating.campaign.main.SubscriptionCampaignService;
-import com.zy.app.rating.prepaid.dao.BalanceDao;
 import com.zy.app.rating.prepaid.dao.RatingSessionDao;
-import com.zy.app.rating.prepaid.model.Balance;
 import com.zy.app.rating.prepaid.model.PrepaidRatingResponse;
 import com.zy.app.rating.prepaid.model.PrepaidRatingStatus;
 import com.zy.app.rating.prepaid.model.RatingSession;
@@ -15,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.zy.app.common.util.MathUtil.round;
+import static com.zy.app.common.util.MathUtil.round2d;
 import static com.zy.app.rating.prepaid.model.builder.PrepaidRatingResponseBuilder.aPrepaidRatingResponse;
 import static com.zy.app.rating.prepaid.model.builder.RatingSessionBuilder.aRatingSession;
 
@@ -66,7 +64,7 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
         } else {
             double balanceAmount = balanceService.getRemainingBalanceExclVat(request.getSubscriptionId());
             ratingResponse = ratingService.estimate(balanceAmount, responseFromCampaigns.getRatingRequest());
-            double totalSessionPrice = round(balanceAmount - ratingResponse.getRemainingBalance(), 2);
+            double totalSessionPrice = round2d(balanceAmount - ratingResponse.getRemainingBalance());
             long grantedUnitsFromStandardRating = ratingResponse.getGrantedUnits();
             long totalGrantedUnits = grantedUnitsFromStandardRating + grantedUnitsFromCampaign;
 
@@ -115,7 +113,7 @@ public class PrepaidRatingServiceImpl implements PrepaidRatingService {
         } else {
             double balanceAmount = balanceService.getRemainingBalanceExclVat(request.getSubscriptionId());
             ratingResponse = ratingService.estimate(balanceAmount, responseFromCampaigns.getRatingRequest());
-            double newPrice = round(balanceAmount - ratingResponse.getRemainingBalance(), 2);
+            double newPrice = round2d(balanceAmount - ratingResponse.getRemainingBalance());
             session.setPrice(newPrice);
             long totalGrantedUnits = ratingResponse.getGrantedUnits() + responseFromCampaigns.getGrantedUnits();
 

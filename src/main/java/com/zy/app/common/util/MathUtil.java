@@ -9,6 +9,10 @@ import java.math.RoundingMode;
  */
 public class MathUtil {
 
+    public static double round2d(double value) {
+        return round(value, 2);
+    }
+
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 

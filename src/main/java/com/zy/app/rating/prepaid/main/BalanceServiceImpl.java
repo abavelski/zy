@@ -42,4 +42,11 @@ public class BalanceServiceImpl implements BalanceService {
         balance.setAmount(balance.getAmount() - amount+vatService.calculateVat(amount));
         balanceDao.updateBalance(balance);
     }
+
+    @Override
+    public void creditBalance(int subscriptionId, double amount) {
+        Balance balance = balanceDao.findBalanceBySubscriptionId(subscriptionId);
+        balance.setAmount(balance.getAmount()+amount);
+        balanceDao.updateBalance(balance);
+    }
 }

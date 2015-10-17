@@ -9,5 +9,6 @@ public interface BalanceService {
     double getRemainingBalanceExclVat(int subscriptionId);
     void reserveAmountExclVat(int subscriptionId, double reserved, double amount);
     void chargeExclVat(int subscriptionId, double reserved, double amount);
+    void creditBalance(int subscriptionId, double amount);
 
 }
