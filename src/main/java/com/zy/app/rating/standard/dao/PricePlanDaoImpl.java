@@ -4,6 +4,7 @@ import com.zy.app.rating.standard.model.PricePlan;
 import com.zy.app.rating.standard.model.TrafficMapping;
 import com.zy.app.rating.standard.model.TrafficMappings;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 
@@ -23,6 +24,7 @@ public class PricePlanDaoImpl implements PricePlanDao {
     private String configPath;
 
     @Override
+    @Cacheable("pp")
     public PricePlan getCampaignPlanByCode(String code) {
         Yaml yaml = new Yaml();
         try {
@@ -33,6 +35,7 @@ public class PricePlanDaoImpl implements PricePlanDao {
     }
 
     @Override
+    @Cacheable("pp")
     public PricePlan getPricePlanByCode(String code) {
         Yaml yaml = new Yaml();
         try {
@@ -43,6 +46,7 @@ public class PricePlanDaoImpl implements PricePlanDao {
     }
 
     @Override
+    @Cacheable("pp")
     public List<TrafficMapping> getTrafficMappingsForPricePlan(String code) {
         Yaml yaml = new Yaml();
         try {
@@ -54,6 +58,7 @@ public class PricePlanDaoImpl implements PricePlanDao {
     }
 
     @Override
+    @Cacheable("pp")
     public List<String> getAllPricePlans() {
         List<String> pricePlans = new ArrayList<>();
         File[] files = new File(configPath+"/priceplans").listFiles();

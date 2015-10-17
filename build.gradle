@@ -37,6 +37,7 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-web")
 	compile("org.springframework.boot:spring-boot-starter-jetty")
     compile("org.springframework.boot:spring-boot-starter-jdbc")
+    compile("org.springframework.boot:spring-boot-starter-cache")
 
     compile("org.postgresql:postgresql:9.4-1200-jdbc41")
     compile("org.yaml:snakeyaml:1.14")

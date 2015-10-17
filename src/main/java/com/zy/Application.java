@@ -5,11 +5,13 @@ import com.zy.rest.JacksonConfig;
 import com.zy.rest.SwaggerConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Import;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSwagger2
+@EnableCaching
 @Import({PluginsConfig.class, JacksonConfig.class, SwaggerConfig.class})
 public class Application {
 
